@@ -2,48 +2,59 @@
 
 import { useEffect, useState } from 'react';
 
+/**
+ * Full-screen splash shown on every fresh document load.
+ * The first render is intentionally visible before hydration, so the splash
+ * does not depend on Next.js navigation or a network loading state.
+ */
 export default function LoadingScreen() {
   const [progress, setProgress] = useState(0);
-  const [phase, setPhase] = useState<'loading' | 'exit' | 'done'>('loading');
+  const [closing, setClosing] = useState(false);
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
-    const duration = 2600;
-    const started = performance.now();
-    let frame = 0;
+    const started = Date.now();
+    const duration = 5000;
+    let interval: ReturnType<typeof setInterval> | undefined;
+    let closeTimer: ReturnType<typeof setTimeout> | undefined;
+    let hideTimer: ReturnType<typeof setTimeout> | undefined;
 
-    const tick = (now: number) => {
-      const raw = Math.min((now - started) / duration, 1);
-      // Smooth cinematic easing, but keep the last 10% slightly longer.
-      const eased = raw < 0.9
-        ? (1 - Math.pow(1 - raw / 0.9, 2.6)) * 0.9
-        : 0.9 + ((raw - 0.9) / 0.1) * 0.1;
-      setProgress(Math.min(100, Math.round(eased * 100)));
+    const update = () => {
+      const elapsed = Date.now() - started;
+      const ratio = Math.min(elapsed / duration, 1);
+      // Slow cinematic start, then a confident finish.
+      const eased = 1 - Math.pow(1 - ratio, 2.2);
+      setProgress(Math.round(eased * 100));
 
-      if (raw < 1) {
-        frame = requestAnimationFrame(tick);
-      } else {
-        setProgress(100);
-        window.setTimeout(() => setPhase('exit'), 260);
-        window.setTimeout(() => setPhase('done'), 850);
+      if (ratio >= 1) {
+        if (interval) clearInterval(interval);
+        closeTimer = setTimeout(() => setClosing(true), 260);
+        hideTimer = setTimeout(() => setHidden(true), 1100);
       }
     };
 
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
+    interval = setInterval(update, 40);
+    update();
+
+    return () => {
+      if (interval) clearInterval(interval);
+      if (closeTimer) clearTimeout(closeTimer);
+      if (hideTimer) clearTimeout(hideTimer);
+    };
   }, []);
 
-  if (phase === 'done') return null;
+  if (hidden) return null;
 
   return (
     <div
-      className={`loadingScreen ${phase === 'exit' ? 'loadingScreenExit' : ''}`}
+      className={`loadingScreen ${closing ? 'loadingScreenExit' : ''}`}
       role="status"
-      aria-label="Memuat Puskesmas Somagede"
+      aria-label="Memuat Portal Puskesmas Somagede"
       aria-live="polite"
     >
       <div className="loadingNoise" aria-hidden="true" />
-      <div className="loadingGlow loadingGlowA" />
-      <div className="loadingGlow loadingGlowB" />
+      <div className="loadingGlow loadingGlowA" aria-hidden="true" />
+      <div className="loadingGlow loadingGlowB" aria-hidden="true" />
 
       <div className="loadingHexes" aria-hidden="true">
         <span /><span /><span /><span /><span /><span />
@@ -55,7 +66,7 @@ export default function LoadingScreen() {
       <main className="loadingContent">
         <div className="loadingLogoWrap">
           <div className="loadingLogoOrbit" aria-hidden="true"><span /></div>
-          <div className="loadingLogoHalo" />
+          <div className="loadingLogoHalo" aria-hidden="true" />
           <div className="loadingLogoCard">
             <img src="/assets/logo-puskesmas-somagede.jpeg" alt="Logo Puskesmas Somagede" />
           </div>
@@ -81,9 +92,9 @@ export default function LoadingScreen() {
       </main>
 
       <div className="loadingFooter">KABUPATEN BANYUMAS • JAWA TENGAH • 2026</div>
-      <div className="loadingWave loadingWaveBack" />
-      <div className="loadingWave loadingWaveMid" />
-      <div className="loadingWave loadingWaveFront" />
+      <div className="loadingWave loadingWaveBack" aria-hidden="true" />
+      <div className="loadingWave loadingWaveMid" aria-hidden="true" />
+      <div className="loadingWave loadingWaveFront" aria-hidden="true" />
     </div>
   );
 }
