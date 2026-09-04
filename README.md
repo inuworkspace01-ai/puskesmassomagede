@@ -49,3 +49,6 @@ Untuk production, set `AUTH_SECRET` dan kredensial/password hash melalui Environ
 - Staf Informasi: `informasi@puskesmas.local` / `StafSomagede@2026!`
 
 For production, replace demo authentication with database-backed users and bcrypt password hashes, and set a strong `AUTH_SECRET` in Vercel Environment Variables.
+
+## Loading screen
+The site now includes an animated Puskesmas Somagede splash/loading screen using the supplied Puskesmas logo. It appears on initial page load, includes an animated progress bar, floating medical accents, layered waves, responsive mobile styling, and respects `prefers-reduced-motion`.
