@@ -52,3 +52,6 @@ For production, replace demo authentication with database-backed users and bcryp
 
 ## Loading screen
 The site now includes an animated Puskesmas Somagede splash/loading screen using the supplied Puskesmas logo. It appears on initial page load, includes an animated progress bar, floating medical accents, layered waves, responsive mobile styling, and respects `prefers-reduced-motion`.
+
+## Loading screen V5
+The portal includes a full-screen Puskesmas Somagede splash on each fresh document load. It is rendered by the root layout from the first server response, runs for approximately 5 seconds, reaches 100%, then fades into the portal. The supplied Puskesmas logo is used from `public/assets/logo-puskesmas-somagede.jpeg`.
