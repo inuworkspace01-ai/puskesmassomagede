@@ -1,0 +1,6 @@
+import { NextResponse } from 'next/server';
+import { authenticate, createSession } from '@/lib/auth';
+
+const hits=new Map<string,{n:number,t:number}>();
+function blocked(ip:string){const now=Date.now();const x=hits.get(ip);if(!x||now-x.t>10*60*1000){hits.set(ip,{n:1,t:now});return false}x.n++;hits.set(ip,x);return x.n>8}
+export async function POST(req:Request){const ip=req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()||'unknown';if(blocked(ip)) return NextResponse.json({error:'Terlalu banyak percobaan. Coba lagi beberapa menit.'},{status:429});try{const {email,password}=await req.json();if(typeof email!=='string'||typeof password!=='string'||email.length>160||password.length>200) return NextResponse.json({error:'Input tidak valid.'},{status:400});const session=await authenticate(email,password);if(!session)return NextResponse.json({error:'Email atau password salah.'},{status:401});const token=await createSession(session);const res=NextResponse.json({ok:true});res.cookies.set('ps_session',token,{httpOnly:true,secure:process.env.NODE_ENV==='production',sameSite:'lax',path:'/',maxAge:8*60*60});return res}catch{return NextResponse.json({error:'Permintaan tidak dapat diproses.'},{status:400})}}
