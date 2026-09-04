@@ -35,18 +35,6 @@ Lambang Kabupaten Banyumas menggunakan referensi Wikimedia Commons yang mencatat
 Logo spesifik Puskesmas Somagede belum ditemukan dari sumber resmi yang dapat diverifikasi dalam pencarian ini, sehingga preview memakai lambang Banyumas sebagai visual utama. Ganti `components/Logo.tsx` ketika aset resmi Puskesmas tersedia.
 
 
-## Demo login awal
-
-- Super Admin: `superadmin@puskesmas.local` / `Somagede@2026!`
-- Admin: `admin@puskesmas.local` / `AdminSomagede@2026!`
-- Staf Informasi: `informasi@puskesmas.local` / `StafSomagede@2026!`
-
-Untuk production, set `AUTH_SECRET` dan kredensial/password hash melalui Environment Variables Vercel.
-
-## Demo Login
-- Super Admin: `superadmin@puskesmas.local` / `Somagede@2026!`
-- Admin: `admin@puskesmas.local` / `AdminSomagede@2026!`
-- Staf Informasi: `informasi@puskesmas.local` / `StafSomagede@2026!`
 
 For production, replace demo authentication with database-backed users and bcrypt password hashes, and set a strong `AUTH_SECRET` in Vercel Environment Variables.
 
