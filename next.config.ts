@@ -4,14 +4,16 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: { remotePatterns: [{ protocol: 'https', hostname: 'commons.wikimedia.org' }] },
   async headers() {
-    return [{ source: '/(.*)', headers: [
-      { key:'X-Content-Type-Options', value:'nosniff' },
-      { key:'Referrer-Policy', value:'strict-origin-when-cross-origin' },
-      { key:'Permissions-Policy', value:'camera=(), microphone=(), geolocation=(self)' },
-      { key:'X-Frame-Options', value:'DENY' },
-      { key:'Strict-Transport-Security', value:'max-age=31536000; includeSubDomains; preload' },
-      { key:'Content-Security-Policy', value:"default-src 'self'; img-src 'self' https://commons.wikimedia.org data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" }
-    ]}];
+    return [{
+      source: '/(.*)', headers: [
+        { key: 'X-Content-Type-Options', value: 'nosniff' },
+        { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+        { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(self)' },
+        { key: 'X-Frame-Options', value: 'DENY' },
+        { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains; preload' },
+        { key: 'Content-Security-Policy', value: "default-src 'self'; img-src 'self' https://commons.wikimedia.org data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" }
+      ]
+    }];
   }
 };
 export default nextConfig;
