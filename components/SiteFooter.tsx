@@ -1,0 +1,3 @@
+import Link from 'next/link';
+import { LogoLockup } from '@/components/Logo';
+export default function SiteFooter(){return <footer className="footer"><div className="container footerGrid"><div><LogoLockup dark/><p style={{marginTop:18}}>Puskesmas Somagede · Jl. Raya Somagede No. 37, Kecamatan Somagede, Kabupaten Banyumas, Jawa Tengah.</p></div><div><b>Navigasi</b><p><Link href="/informasi">Informasi</Link><br/><Link href="/layanan">Layanan</Link><br/><Link href="/profil">Profil</Link></p></div><div><b>Pengelola</b><p>Super Admin<br/>Admin<br/>Staf Informasi</p></div></div><div className="container footerBottom">© 2026 Puskesmas Somagede · Portal informasi digital.</div></footer>}
