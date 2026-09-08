@@ -41,9 +41,6 @@ jobs:
           test -d "$JAVA_HOME"
           test -d "$ANDROID_SDK_PATH"
 
-          # Bubblewrap expects sdkmanager to be discoverable from the SDK root.
-          # Find the actual cmdline-tools directory instead of assuming a
-          # specific 'latest' or versioned folder name.
           SDKMANAGER="$(find "$ANDROID_SDK_PATH/cmdline-tools" -type f -name sdkmanager -path '*/bin/sdkmanager' -print -quit 2>/dev/null || true)"
           if [ -z "$SDKMANAGER" ]; then
             echo "sdkmanager not found under $ANDROID_SDK_PATH/cmdline-tools" >&2
@@ -71,9 +68,6 @@ jobs:
           }
           EOF
           cat "$HOME/.bubblewrap/config.json"
-
-          # Bubblewrap's doctor has legacy SDK-layout checks on some versions.
-          # The required SDK components are already installed and verified.
           bubblewrap doctor || true
 
       - name: Prepare signing key
@@ -115,7 +109,7 @@ jobs:
             "navigationDividerColorDark": "#062e2b",
             "backgroundColor": "#f7fffd",
             "startUrl": "/",
-            "iconUrl": "https://puskesmas-somagede-inuu.vercel.app/assets/logo-puskesmas-somagede.jpeg",
+            "iconUrl": "https://raw.githubusercontent.com/inuworkspace01-ai/puskesmassomagede/main/public/assets/logo-puskesmas-somagede.jpeg",
             "webManifestUrl": "https://puskesmas-somagede-inuu.vercel.app/manifest.webmanifest",
             "splashScreenFadeOutDuration": 300,
             "signingKey": { "path": "../android.keystore", "alias": "puskesmas" },
