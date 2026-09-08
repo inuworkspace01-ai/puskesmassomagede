@@ -112,6 +112,7 @@ jobs:
             "startUrl": "/",
             "iconUrl": "https://raw.githubusercontent.com/inuworkspace01-ai/puskesmassomagede/main/public/assets/logo-puskesmas-somagede.jpeg",
             "splashScreenFadeOutDuration": 300,
+            "enableNotifications": false,
             "signingKey": { "path": "../android.keystore", "alias": "puskesmas" },
             "appVersionName": "1.0.${{ github.run_number }}",
             "appVersionCode": ${{ github.run_number }},
@@ -124,7 +125,7 @@ jobs:
           cd android
           bubblewrap update --manifest=twa-manifest.json --skipVersionUpgrade
           echo "--- generated app/build.gradle relevant section ---"
-          grep -n -A8 -B8 "def twaManifest" app/build.gradle || true
+          sed -n '23,50p' app/build.gradle
 
       - name: Build signed APK
         env:
@@ -140,7 +141,7 @@ jobs:
             export BUBBLEWRAP_KEY_PASSWORD="temporary-build-password"
           fi
           cd android
-          yes | bubblewrap build --manifest=twa-manifest.json --signingKeyPath="../android.keystore" --signingKeyAlias=puskesmas --skipPwaValidation
+          bubblewrap build --manifest=twa-manifest.json --signingKeyPath="../android.keystore" --signingKeyAlias=puskesmas --skipPwaValidation
           cp app-release-signed.apk ../puskesmas-somagede.apk
 
       - name: Publish latest APK release
