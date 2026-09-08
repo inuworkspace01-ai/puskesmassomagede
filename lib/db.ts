@@ -1,4 +1,5 @@
 import { neon } from '@neondatabase/serverless';
+import { SEPTEMBER_PERAWAT_SCHEDULES } from './perawatSeptember';
 
 let initialized: Promise<void> | null = null;
 
@@ -59,10 +60,13 @@ export async function ensureDatabase() {
         ['sched-skrining-bpjs','Skrining BPJS','Skrining BPJS','Belum diatur','Belum diatur','Belum diatur','Hari, jam, dan petugas diisi melalui dashboard admin.']
       ];
       for (const [id,title,category,day,time,staff,notes] of rows) {
-        await sql`
-          INSERT INTO site_schedules (id,title,category,day,time,staff,notes,published)
-          VALUES (${id},${title},${category},${day},${time},${staff},${notes},TRUE)
-        `;
+        await sql`INSERT INTO site_schedules (id,title,category,day,time,staff,notes,published) VALUES (${id},${title},${category},${day},${time},${staff},${notes},TRUE)`;
+      }
+    }
+    const perawat = await sql`SELECT COUNT(*)::int AS count FROM site_schedules WHERE category='Perawat' AND id LIKE 'perawat-2026-09-%'`;
+    if (Number(perawat[0]?.count || 0) === 0) {
+      for (const [id,title,category,day,time,staff,notes] of SEPTEMBER_PERAWAT_SCHEDULES) {
+        await sql`INSERT INTO site_schedules (id,title,category,day,time,staff,notes,published) VALUES (${id},${title},${category},${day},${time},${staff},${notes},TRUE) ON CONFLICT (id) DO NOTHING`;
       }
     }
   })();
