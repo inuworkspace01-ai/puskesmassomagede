@@ -23,6 +23,12 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-34 build-tools;34.0.0'
+          accept-android-sdk-licenses: true
+
       - name: Install Bubblewrap
         run: npm install -g @bubblewrap/cli
 
@@ -35,21 +41,27 @@ jobs:
           test -d "$JAVA_HOME"
           test -d "$ANDROID_SDK_PATH"
 
-          # GitHub-hosted runners use modern cmdline-tools layout. Bubblewrap
-          # expects sdkmanager to be discoverable from the SDK root and needs
-          # Build Tools 34.0.0 available before its environment validation.
-          if [ ! -e "$ANDROID_SDK_PATH/bin" ] && [ -d "$ANDROID_SDK_PATH/cmdline-tools/latest/bin" ]; then
-            ln -s "$ANDROID_SDK_PATH/cmdline-tools/latest/bin" "$ANDROID_SDK_PATH/bin"
+          # Bubblewrap expects sdkmanager to be discoverable from the SDK root.
+          # Find the actual cmdline-tools directory instead of assuming a
+          # specific 'latest' or versioned folder name.
+          SDKMANAGER="$(find "$ANDROID_SDK_PATH/cmdline-tools" -type f -name sdkmanager -path '*/bin/sdkmanager' -print -quit 2>/dev/null || true)"
+          if [ -z "$SDKMANAGER" ]; then
+            echo "sdkmanager not found under $ANDROID_SDK_PATH/cmdline-tools" >&2
+            find "$ANDROID_SDK_PATH/cmdline-tools" -maxdepth 3 -type f 2>/dev/null | head -100 || true
+            exit 1
           fi
-
-          SDKMANAGER="$ANDROID_SDK_PATH/bin/sdkmanager"
-          if [ ! -x "$SDKMANAGER" ]; then
-            SDKMANAGER="$ANDROID_SDK_PATH/cmdline-tools/latest/bin/sdkmanager"
-          fi
+          echo "SDKMANAGER=$SDKMANAGER"
           test -x "$SDKMANAGER"
+          "$SDKMANAGER" --version
 
-          yes | "$SDKMANAGER" --licenses >/dev/null || true
-          "$SDKMANAGER" "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+          SDK_BIN_DIR="$(dirname "$SDKMANAGER")"
+          if [ ! -e "$ANDROID_SDK_PATH/bin" ]; then
+            ln -s "$SDK_BIN_DIR" "$ANDROID_SDK_PATH/bin"
+          fi
+
+          test -d "$ANDROID_SDK_PATH/build-tools/34.0.0"
+          test -d "$ANDROID_SDK_PATH/platforms/android-34"
+          test -d "$ANDROID_SDK_PATH/platform-tools"
 
           mkdir -p "$HOME/.bubblewrap"
           cat > "$HOME/.bubblewrap/config.json" <<EOF
@@ -60,8 +72,8 @@ jobs:
           EOF
           cat "$HOME/.bubblewrap/config.json"
 
-          # Do not fail the job on Bubblewrap's legacy doctor check; the SDK
-          # components required by the build have been installed explicitly.
+          # Bubblewrap's doctor has legacy SDK-layout checks on some versions.
+          # The required SDK components are already installed and verified.
           bubblewrap doctor || true
 
       - name: Prepare signing key
