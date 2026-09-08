@@ -28,13 +28,19 @@ jobs:
 
       - name: Configure Bubblewrap for GitHub Actions
         run: |
+          ANDROID_SDK_PATH="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
           echo "JAVA_HOME=$JAVA_HOME"
-          echo "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
+          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_PATH"
           test -d "$JAVA_HOME"
-          test -d "${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
-          bubblewrap updateConfig \
-            --jdkPath="$JAVA_HOME" \
-            --androidSdkPath="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
+          test -d "$ANDROID_SDK_PATH"
+          mkdir -p "$HOME/.bubblewrap"
+          cat > "$HOME/.bubblewrap/config.json" <<EOF
+          {
+            "jdkPath": "$JAVA_HOME",
+            "androidSdkPath": "$ANDROID_SDK_PATH"
+          }
+          EOF
+          cat "$HOME/.bubblewrap/config.json"
           bubblewrap doctor
 
       - name: Prepare signing key
