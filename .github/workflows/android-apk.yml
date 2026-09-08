@@ -1,25 +1,31 @@
 name: Build Android APK
+
 on:
   push:
     branches: [main]
   workflow_dispatch:
+
 permissions:
   contents: write
+
 jobs:
   build-apk:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
+
       - name: Install Bubblewrap
         run: npm install -g @bubblewrap/cli
+
       - name: Prepare signing key
         env:
           KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
@@ -27,8 +33,15 @@ jobs:
           if [ -n "$KEYSTORE_B64" ]; then
             echo "$KEYSTORE_B64" | base64 --decode > android.keystore
           else
-            keytool -genkeypair -v -keystore android.keystore -alias puskesmas -keyalg RSA -keysize 2048 -validity 10000 -storepass temporary-build-password -keypass temporary-build-password -dname "CN=Puskesmas Somagede, OU=IT, O=Puskesmas Somagede, L=Banyumas, ST=Jawa Tengah, C=ID"
+            keytool -genkeypair -v \
+              -keystore android.keystore \
+              -alias puskesmas \
+              -keyalg RSA -keysize 2048 -validity 10000 \
+              -storepass temporary-build-password \
+              -keypass temporary-build-password \
+              -dname "CN=Puskesmas Somagede, OU=IT, O=Puskesmas Somagede, L=Banyumas, ST=Jawa Tengah, C=ID"
           fi
+
       - name: Generate TWA project
         env:
           KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
@@ -51,45 +64,44 @@ jobs:
             "navigationDividerColor": "#0f766e",
             "navigationDividerColorDark": "#062e2b",
             "backgroundColor": "#f7fffd",
-            "enableNotifications": false,
             "startUrl": "/",
             "iconUrl": "https://puskesmas-somagede-inuu.vercel.app/assets/logo-puskesmas-somagede.jpeg",
+            "webManifestUrl": "https://puskesmas-somagede-inuu.vercel.app/manifest.webmanifest",
             "splashScreenFadeOutDuration": 300,
             "signingKey": { "path": "../android.keystore", "alias": "puskesmas" },
             "appVersionName": "1.0.${{ github.run_number }}",
             "appVersionCode": ${{ github.run_number }},
-            "shortcuts": [],
-            "generatorApp": "bubblewrap-cli",
-            "webManifestUrl": "https://puskesmas-somagede-inuu.vercel.app/manifest.webmanifest",
-            "fallbackType": "customtabs",
-            "features": {},
-            "alphaDependencies": { "enabled": false },
-            "enableSiteSettingsShortcut": true,
-            "isChromeOSOnly": false,
-            "isMetaQuest": false,
             "minSdkVersion": 23,
-            "orientation": "portrait",
-            "fingerprints": [],
-            "additionalTrustedOrigins": [],
-            "retainedBundles": [],
-            "appVersion": "1.0.${{ github.run_number }}"
+            "orientation": "portrait"
           }
           EOF
           export BUBBLEWRAP_KEYSTORE_PASSWORD="$KS_PASSWORD"
           export BUBBLEWRAP_KEY_PASSWORD="$K_PASSWORD"
-          bubblewrap update --manifest=android/twa-manifest.json --skipVersionUpgrade
+          cd android
+          bubblewrap update --manifest=twa-manifest.json --skipVersionUpgrade
+
       - name: Build signed APK
         env:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          if [ -n "$ANDROID_KEYSTORE_PASSWORD" ]; then export BUBBLEWRAP_KEYSTORE_PASSWORD="$ANDROID_KEYSTORE_PASSWORD"; export BUBBLEWRAP_KEY_PASSWORD="$ANDROID_KEY_PASSWORD"; else export BUBBLEWRAP_KEYSTORE_PASSWORD="temporary-build-password"; export BUBBLEWRAP_KEY_PASSWORD="temporary-build-password"; fi
+          if [ -n "$ANDROID_KEYSTORE_PASSWORD" ]; then
+            export BUBBLEWRAP_KEYSTORE_PASSWORD="$ANDROID_KEYSTORE_PASSWORD"
+            export BUBBLEWRAP_KEY_PASSWORD="$ANDROID_KEY_PASSWORD"
+          else
+            export BUBBLEWRAP_KEYSTORE_PASSWORD="temporary-build-password"
+            export BUBBLEWRAP_KEY_PASSWORD="temporary-build-password"
+          fi
           cd android
           bubblewrap build --manifest=twa-manifest.json --signingKeyPath="../android.keystore" --signingKeyAlias=puskesmas --skipPwaValidation
           cp app-release-signed.apk ../puskesmas-somagede.apk
+
       - name: Publish latest APK release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release delete android-latest --yes --cleanup-tag || true
-          gh release create android-latest puskesmas-somagede.apk --title "Puskesmas Somagede Android" --notes "APK Android terbaru untuk Portal Puskesmas Somagede. Dibangun otomatis dari branch main." --latest
+          gh release create android-latest puskesmas-somagede.apk \
+            --title "Puskesmas Somagede Android" \
+            --notes "APK Android terbaru untuk Portal Puskesmas Somagede. Dibangun otomatis dari branch main." \
+            --latest
