@@ -1,0 +1,5 @@
+import {NextResponse} from 'next/server';
+import {ensureDatabase,db} from '@/lib/db';
+export const runtime='nodejs';
+const clean=(v:any,max:number)=>String(v??'').trim().slice(0,max);
+export async function POST(req:Request){try{await ensureDatabase();const b=await req.json();const message=clean(b?.message,1500);const rating=Math.round(Number(b?.rating));if(!message||!Number.isInteger(rating)||rating<1||rating>5)return NextResponse.json({error:'Saran/keluhan dan rating wajib diisi.'},{status:400});const name=clean(b?.name,100),category=['Saran','Keluhan','Apresiasi'].includes(b?.category)?b.category:'Saran',service=clean(b?.service,120),contact=clean(b?.contact,120);const id=`feedback-${Date.now()}-${Math.random().toString(36).slice(2,8)}`;await db()`INSERT INTO visitor_feedback (id,name,category,message,rating,service,contact) VALUES (${id},${name},${category},${message},${rating},${service},${contact})`;return NextResponse.json({ok:true})}catch(e){console.error('FEEDBACK_POST_ERROR',e);return NextResponse.json({error:'Saran/keluhan gagal disimpan. Coba lagi.'},{status:500})}}
