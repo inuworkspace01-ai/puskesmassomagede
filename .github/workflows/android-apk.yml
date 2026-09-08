@@ -30,7 +30,7 @@ jobs:
           accept-android-sdk-licenses: true
 
       - name: Install Bubblewrap
-        run: npm install -g @bubblewrap/cli
+        run: npm install -g @bubblewrap/cli@1.25.0
 
       - name: Configure Android SDK for Bubblewrap
         run: |
@@ -91,6 +91,7 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
+          set -e
           mkdir -p android
           if [ -n "$KEYSTORE_PASSWORD" ]; then KS_PASSWORD="$KEYSTORE_PASSWORD"; else KS_PASSWORD="temporary-build-password"; fi
           if [ -n "$KEY_PASSWORD" ]; then K_PASSWORD="$KEY_PASSWORD"; else K_PASSWORD="temporary-build-password"; fi
@@ -110,7 +111,6 @@ jobs:
             "backgroundColor": "#f7fffd",
             "startUrl": "/",
             "iconUrl": "https://raw.githubusercontent.com/inuworkspace01-ai/puskesmassomagede/main/public/assets/logo-puskesmas-somagede.jpeg",
-            "webManifestUrl": "https://raw.githubusercontent.com/inuworkspace01-ai/puskesmassomagede/main/public/manifest.webmanifest",
             "splashScreenFadeOutDuration": 300,
             "signingKey": { "path": "../android.keystore", "alias": "puskesmas" },
             "appVersionName": "1.0.${{ github.run_number }}",
@@ -123,12 +123,15 @@ jobs:
           export BUBBLEWRAP_KEY_PASSWORD="$K_PASSWORD"
           cd android
           bubblewrap update --manifest=twa-manifest.json --skipVersionUpgrade
+          echo "--- generated app/build.gradle relevant section ---"
+          grep -n -A8 -B8 "def twaManifest" app/build.gradle || true
 
       - name: Build signed APK
         env:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
+          set -e
           if [ -n "$ANDROID_KEYSTORE_PASSWORD" ]; then
             export BUBBLEWRAP_KEYSTORE_PASSWORD="$ANDROID_KEYSTORE_PASSWORD"
             export BUBBLEWRAP_KEY_PASSWORD="$ANDROID_KEY_PASSWORD"
