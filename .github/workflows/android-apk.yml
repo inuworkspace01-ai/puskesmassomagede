@@ -110,7 +110,7 @@ jobs:
             "backgroundColor": "#f7fffd",
             "startUrl": "/",
             "iconUrl": "https://raw.githubusercontent.com/inuworkspace01-ai/puskesmassomagede/main/public/assets/logo-puskesmas-somagede.jpeg",
-            "webManifestUrl": "https://puskesmas-somagede-inuu.vercel.app/manifest.webmanifest",
+            "webManifestUrl": "https://raw.githubusercontent.com/inuworkspace01-ai/puskesmassomagede/main/public/manifest.webmanifest",
             "splashScreenFadeOutDuration": 300,
             "signingKey": { "path": "../android.keystore", "alias": "puskesmas" },
             "appVersionName": "1.0.${{ github.run_number }}",
