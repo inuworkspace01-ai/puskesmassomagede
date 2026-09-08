@@ -1,0 +1,16 @@
+{
+  "name": "Puskesmas Somagede",
+  "short_name": "Puskesmas Somagede",
+  "description": "Portal informasi dan layanan digital Puskesmas Somagede, Kabupaten Banyumas.",
+  "lang": "id-ID",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f6fbf8",
+  "theme_color": "#166534",
+  "icons": [
+    {"src":"/assets/logo-puskesmas-somagede.jpeg","sizes":"192x192","type":"image/jpeg","purpose":"any maskable"},
+    {"src":"/assets/logo-puskesmas-somagede.jpeg","sizes":"512x512","type":"image/jpeg","purpose":"any maskable"}
+  ]
+}
