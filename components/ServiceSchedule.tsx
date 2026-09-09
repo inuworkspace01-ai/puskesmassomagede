@@ -10,8 +10,14 @@ const hours: Record<number, [string, string, string]> = {
 type Row = { id: string; title: string; category: string; day: string; time: string; staff: string; notes: string };
 type StaffRow = { id: string; name: string; task: string; source: Row };
 
+// Kode jadwal resmi -> label yang tampil ke masyarakat.
 const TASK_LABELS: Record<string, string> = {
-  SDA: 'TTV', TTV: 'TTV', RJ: 'BP', RT: 'IGD', ILP: 'POSYANDU', PRA: 'SKRINING',
+  SDA: 'TTV',
+  TTV: 'TTV',
+  RJ: 'BP',
+  RT: 'IGD',
+  ILP: 'POSYANDU',
+  PRA: 'SKRINING',
 };
 
 function cleanTask(value: string) {
@@ -55,8 +61,8 @@ export default function ServiceSchedule() {
   return <div className="scheduleWidget">
     <div className="scheduleNow"><div><div className="eyebrow"><CalendarClock size={15} /> Jadwal real-time WIB</div><h3>{date}</h3><p>Waktu sekarang <b>{time} WIB</b></p></div><div className={`openBadge ${open ? 'isOpen' : ''}`}>{open ? <CheckCircle2 size={16} /> : <Clock3 size={16} />} {open ? 'Sedang buka' : 'Di luar jam pendaftaran'}</div></div>
     <div className="scheduleToday"><b>{s[0]}</b><span>Pendaftaran {s[1]} – {s[2]} WIB</span></div>
-    <div className="scheduleOperational"><div className="sectionHead mini"><div><div className="eyebrow">PETUGAS HARI INI</div><h3>Jadwal perawat realtime</h3></div></div>
-      {staffRows.length ? <div className="operationalGrid">{staffRows.map(staff => <div className="operationalCard" key={staff.id}><div className="icon">{icon(staff.source.category)}</div><div><div className="newsMeta"><span>{staff.source.category}</span></div><h4>{staff.name}</h4><p><b>{staff.source.time}</b></p><p>Tugas: <b>{staff.task}</b></p></div></div>)}</div> : <div className="emptyState">Belum ada jadwal perawat untuk hari ini.</div>}
+    <div className="scheduleOperational"><div className="sectionHead mini"><div><div className="eyebrow">PETUGAS HARI INI</div><h3>Jadwal perawat realtime</h3></div><span className="scheduleCount">{staffRows.length} petugas</span></div>
+      {staffRows.length ? <div className="operationalGrid">{staffRows.map(staff => <div className="operationalCard" key={staff.id}><div className="icon">{icon(staff.source.category)}</div><div className="operationalInfo"><div className="newsMeta"><span>{staff.source.category}</span><span className="scheduleDot">•</span><span>{staff.source.time}</span></div><h4>{staff.name}</h4><span className="taskBadge"><span>Tugas</span>{staff.task}</span></div></div>)}</div> : <div className="emptyState">Belum ada jadwal perawat untuk hari ini.</div>}
     </div>
     <div className="scheduleList">{[1,2,3,4,5,6].map(d => <div key={d}><span>{hours[d][0]}</span><b>{hours[d][1]} – {hours[d][2]} WIB</b></div>)}</div>
   </div>;
