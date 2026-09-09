@@ -4,6 +4,8 @@ import './ui-enhancements.css';
 import './theme-fixes.css';
 import './experience-polish.css';
 import './experience-v4.css';
+import './experience-v5.css';
+import './experience-v6.css';
 import type { Metadata, Viewport } from 'next';
 import LoadingScreen from '@/components/LoadingScreen';
 import SiteChrome from '@/components/SiteChrome';
