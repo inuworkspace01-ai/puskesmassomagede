@@ -19,7 +19,8 @@
   .villageGrid3d{grid-template-columns:1fr!important}
   html[data-theme='dark'] .nav{background:rgba(7,18,14,.9)!important;border-bottom:1px solid rgba(65,103,89,.42)}
   html[data-theme='dark'] .mobileBottomNav{background:rgba(8,24,18,.92);border-color:#29473b;box-shadow:0 18px 50px rgba(0,0,0,.38),inset 0 1px rgba(255,255,255,.05)}
-  html[data-theme='dark'] .mobileBottomNav a,html[data-theme='dark'] .mobileBottomNav button{color:#9bb9af!important}.html[data-theme='dark'] .mobileBottomNav a.navActive{color:#76e4bc!important;background:#12372a!important}
+  html[data-theme='dark'] .mobileBottomNav a,html[data-theme='dark'] .mobileBottomNav button{color:#9bb9af!important}
+  html[data-theme='dark'] .mobileBottomNav a.navActive{color:#76e4bc!important;background:#12372a!important}
   html[data-theme='dark'] .mobileMorePanel{background:#0c1d17;border-color:#29473b}html[data-theme='dark'] .mobileMorePanel a{background:#10261e;border-color:#29473b;color:#eafff5}
 }
 @media(min-width:761px){.mobileBottomNav,.mobileMorePanel{display:none!important}}
