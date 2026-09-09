@@ -1,59 +1,42 @@
 import Link from 'next/link';
-import { ArrowLeft, Download, QrCode, ShieldCheck, Smartphone, Zap } from 'lucide-react';
+import { ArrowLeft, Download, QrCode, ShieldCheck, Smartphone, Zap, Globe2 } from 'lucide-react';
 import PageTransition from '@/components/PageTransition';
 import { Logo } from '@/components/Logo';
 import InstallPWA from '@/components/InstallPWA';
 
-const downloadPageUrl = 'https://puskesmas-somagede-inuu.vercel.app/download';
 const apkUrl = 'https://github.com/inuworkspace01-ai/puskesmassomagede/releases/latest/download/puskesmas-somagede.apk';
-const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=12&data=${encodeURIComponent(downloadPageUrl)}`;
+const qrSrc = '/assets/qr-download-puskesmas-somagede.svg';
 
 export default function DownloadPage(){
-  return <PageTransition><main className="section"><div className="container" style={{maxWidth:980}}>
+  return <PageTransition><main className="downloadPage section"><div className="container downloadContainer">
     <Link href="/" className="textLink"><ArrowLeft size={16}/> Kembali ke beranda</Link>
 
-    <div className="featureBand" style={{marginTop:24,alignItems:'center'}}>
-      <div>
-        <div className="eyebrow"><Smartphone size={15}/> APLIKASI ANDROID RESMI</div>
+    <section className="downloadHero featureBand">
+      <div className="downloadHeroCopy">
+        <div className="eyebrow"><Smartphone size={15}/> APLIKASI MOBILE & WEBSITE</div>
         <h1>Portal Puskesmas Somagede di HP kamu.</h1>
-        <p>Gunakan portal Puskesmas Somagede seperti aplikasi Android untuk mengakses informasi, layanan, jadwal, wilayah kerja, dan Asisten Puskesmas.</p>
+        <p>Gunakan portal seperti aplikasi Android untuk mengakses informasi, layanan, jadwal, wilayah kerja, dan Asisten Puskesmas dalam satu tempat.</p>
         <div className="actions">
           <InstallPWA />
           <a className="btn secondary" href={apkUrl}><Download size={18}/> Download APK</a>
         </div>
-        <div className="statGrid" style={{marginTop:20}}>
+        <div className="statGrid downloadStats">
           <div className="stat"><strong><Zap size={18}/></strong><span>Ringan & cepat</span></div>
-          <div className="stat"><strong><ShieldCheck size={18}/></strong><span>Akses HTTPS</span></div>
-          <div className="stat"><strong><Smartphone size={18}/></strong><span>Android</span></div>
+          <div className="stat"><strong><ShieldCheck size={18}/></strong><span>HTTPS</span></div>
+          <div className="stat"><strong><Globe2 size={18}/></strong><span>Responsif</span></div>
         </div>
       </div>
-      <div className="heroArt" style={{minHeight:280}}><div className="heroOrb orb1"/><div className="heroOrb orb2"/><div className="centerSeal"><div className="portalLogo"><div className="portalHalo"><Logo/></div><span>APLIKASI</span><small>PUSKESMAS SOMAGEDE</small></div></div></div>
-    </div>
+      <div className="downloadHeroArt" aria-hidden="true"><div className="downloadOrb downloadOrbA"/><div className="downloadOrb downloadOrbB"/><div className="downloadPhone"><div className="downloadPhoneTop"/><div className="downloadPhoneScreen"><Logo/><b>APLIKASI</b><span>PUSKESMAS SOMAGEDE</span></div></div></div>
+    </section>
 
-    <section className="section" style={{paddingBottom:0}}>
-      <div className="sectionHead"><div><div className="eyebrow"><QrCode size={15}/> AKSES CEPAT</div><h2>Scan QR untuk membuka halaman aplikasi</h2><p>Scan menggunakan kamera HP. Dari halaman ini kamu bisa memasang PWA atau mengunduh APK.</p></div></div>
-      <div className="featureBand" style={{marginTop:18,alignItems:'center'}}>
-        <div style={{textAlign:'center'}}>
-          <div style={{display:'inline-flex',padding:12,borderRadius:20,background:'#fff',boxShadow:'0 14px 35px rgba(0,0,0,.10)'}}>
-            <img src={qrUrl} alt="QR Code halaman download aplikasi Puskesmas Somagede" width={240} height={240} loading="lazy" style={{display:'block',width:240,height:240}} />
-          </div>
-          <p style={{marginTop:10,fontSize:13,opacity:.72}}>puskesmas-somagede-inuu.vercel.app/download</p>
-        </div>
-        <div>
-          <div className="eyebrow">REKOMENDASI</div>
-          <h3>Pasang PWA tanpa APK</h3>
-          <p>Di Chrome Android, gunakan tombol <strong>Install di HP</strong> jika tersedia. PWA dipasang langsung dari website dan tidak membutuhkan Play Store.</p>
-          <p style={{fontSize:13,opacity:.75}}>Jika tombol install belum muncul, buka halaman ini melalui Chrome Android dan tunggu beberapa detik setelah halaman selesai dimuat.</p>
-        </div>
+    <section className="downloadQrSection section">
+      <div className="sectionHead"><div><div className="eyebrow"><QrCode size={15}/> AKSES CEPAT</div><h2>Scan QR untuk membuka aplikasi</h2><p>QR dibuat secara lokal sehingga tidak bergantung pada layanan QR eksternal yang bisa gagal dimuat.</p></div></div>
+      <div className="downloadQrCard featureBand">
+        <div className="downloadQrWrap"><img src={qrSrc} alt="QR Code halaman aplikasi Puskesmas Somagede" width={260} height={260}/><span>puskesmas-somagede-inuu.vercel.app/download</span></div>
+        <div className="downloadQrCopy"><div className="eyebrow">REKOMENDASI</div><h3>Pasang PWA langsung dari HP</h3><p>Di Chrome Android, gunakan tombol <strong>Install di HP</strong> ketika tersedia. PWA terasa seperti aplikasi dan dapat mengikuti pembaruan website.</p><p className="hint">Untuk pengguna APK, gunakan tombol Download APK dari sumber resmi Puskesmas Somagede.</p></div>
       </div>
     </section>
 
-    <div className="sectionHead" style={{marginTop:34}}><div><div className="eyebrow">CARA INSTALL APK</div><h2>Instalasi manual</h2></div></div>
-    <div className="cards">
-      <div className="card"><div className="icon"><span>1</span></div><h3>Download APK</h3><p>Tekan tombol Download APK dari halaman resmi ini.</p></div>
-      <div className="card"><div className="icon"><span>2</span></div><h3>Izinkan instalasi</h3><p>Jika Android meminta izin, aktifkan izin instalasi dari sumber ini.</p></div>
-      <div className="card"><div className="icon"><span>3</span></div><h3>Buka aplikasi</h3><p>Setelah selesai, buka Portal Puskesmas Somagede dari layar HP.</p></div>
-    </div>
-    <p style={{marginTop:20,fontSize:13,opacity:.72}}>Catatan keamanan: unduh APK hanya dari halaman resmi Puskesmas Somagede. Untuk pembaruan konten website, PWA dapat menerima perubahan tanpa memasang APK baru.</p>
+    <section className="downloadSteps"><div className="sectionHead"><div><div className="eyebrow">CARA INSTALL</div><h2>Pilih cara yang paling nyaman</h2></div></div><div className="cards"><div className="card"><div className="icon"><span>1</span></div><h3>PWA</h3><p>Buka portal di Chrome Android lalu pilih Install di HP.</p></div><div className="card"><div className="icon"><span>2</span></div><h3>APK</h3><p>Unduh APK resmi dan ikuti proses instalasi Android.</p></div><div className="card"><div className="icon"><span>3</span></div><h3>Gunakan</h3><p>Akses informasi, layanan, berita, jadwal, dan Asisten dari satu aplikasi.</p></div></div></section>
   </div></main></PageTransition>
 }
