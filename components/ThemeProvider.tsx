@@ -3,12 +3,10 @@
 import {createContext,useContext,useEffect,useState} from 'react';
 
 type Theme='light'|'dark';
-
 type ThemeContextValue={theme:Theme;toggleTheme:()=>void};
 const ThemeContext=createContext<ThemeContextValue>({theme:'light',toggleTheme:()=>{}});
 
-function getInitialTheme():Theme{
-  if(typeof window==='undefined') return 'light';
+function getStoredTheme():Theme{
   try{
     const saved=localStorage.getItem('somagede-theme');
     if(saved==='dark'||saved==='light') return saved;
@@ -22,16 +20,16 @@ function applyTheme(theme:Theme){
 }
 
 export default function ThemeProvider({children}:{children:React.ReactNode}){
-  const [theme,setTheme]=useState<Theme>(getInitialTheme);
-
+  // Keep the first server/client render deterministic. Read browser preference after mount.
+  const [theme,setTheme]=useState<Theme>('light');
   useEffect(()=>{
-    applyTheme(theme);
-    try{localStorage.setItem('somagede-theme',theme);}catch{}
-  },[theme]);
-
+    const next=getStoredTheme();
+    setTheme(next);
+    applyTheme(next);
+    try{localStorage.setItem('somagede-theme',next);}catch{}
+  },[]);
+  useEffect(()=>{applyTheme(theme);try{localStorage.setItem('somagede-theme',theme);}catch{}},[theme]);
   const toggleTheme=()=>setTheme(current=>current==='dark'?'light':'dark');
-
   return <ThemeContext.Provider value={{theme,toggleTheme}}>{children}</ThemeContext.Provider>;
 }
-
 export const useTheme=()=>useContext(ThemeContext);
