@@ -2,7 +2,8 @@ import './globals.css';
 import './boot.css';
 import './ui-enhancements.css';
 import './theme-fixes.css';
-import type { Metadata } from 'next';
+import './experience-polish.css';
+import type { Metadata, Viewport } from 'next';
 import LoadingScreen from '@/components/LoadingScreen';
 import SiteChrome from '@/components/SiteChrome';
 import PWARegister from '@/components/PWARegister';
@@ -12,6 +13,13 @@ export const metadata: Metadata = {
   title: 'Puskesmas Somagede',
   description: 'Portal Digital Puskesmas Somagede',
   manifest: '/manifest.webmanifest',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: '#108765',
 };
 
 const themeInit = `(function(){try{var t=localStorage.getItem('somagede-theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t;}catch(e){document.documentElement.dataset.theme='light';document.documentElement.style.colorScheme='light';}})()`;

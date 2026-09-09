@@ -11,18 +11,14 @@ export default function PWARegister() {
 
   useEffect(() => {
     let cancelled = false;
-
-    const register = async () => {
-      if (!('serviceWorker' in navigator)) return;
+    const boot = async () => {
       try {
-        const registration = await navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' });
-        await registration.update();
+        if ('serviceWorker' in navigator) {
+          const registration = await navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' });
+          await registration.update();
+        }
       } catch {}
-    };
 
-    register();
-
-    const checkRelease = async () => {
       try {
         const response = await fetch(`/app-version.json?t=${Date.now()}`, { cache: 'no-store' });
         if (!response.ok) return;
@@ -40,33 +36,16 @@ export default function PWARegister() {
       } catch {}
     };
 
-    checkRelease();
-    const timer = window.setInterval(() => {
-      register();
-      checkRelease();
-    }, 5 * 60 * 1000);
-
-    return () => {
-      cancelled = true;
-      window.clearInterval(timer);
-    };
+    boot();
+    const timer = window.setInterval(boot, 5 * 60 * 1000);
+    return () => { cancelled = true; window.clearInterval(timer); };
   }, []);
 
   if (!visible || !release?.version) return null;
-
-  const dismiss = () => {
-    localStorage.setItem(KEY, release.version!);
-    setVisible(false);
-  };
-
-  return (
-    <div role="status" aria-live="polite" style={{position:'fixed',left:16,right:16,bottom:16,zIndex:99998,maxWidth:560,margin:'0 auto',padding:'14px 16px',borderRadius:18,background:'rgba(6,46,43,.96)',color:'#fff',boxShadow:'0 16px 40px rgba(0,0,0,.24)',backdropFilter:'blur(16px)',display:'flex',gap:12,alignItems:'center'}}>
-      <div style={{flex:1}}>
-        <strong style={{display:'block',marginBottom:3}}>Versi baru tersedia</strong>
-        <span style={{fontSize:13,opacity:.88}}>Puskesmas Somagede versi {release.version} sudah tersedia.</span>
-      </div>
-      <a href={release.playStoreUrl || 'https://play.google.com/store/apps/details?id=id.go.puskesmassomagede.portal'} target="_blank" rel="noopener noreferrer" onClick={dismiss} style={{background:'#22c55e',color:'#052e16',fontWeight:800,textDecoration:'none',padding:'9px 13px',borderRadius:12,whiteSpace:'nowrap',fontSize:13}}>Update</a>
-      <button type="button" onClick={dismiss} aria-label="Tutup notifikasi update" style={{border:0,background:'transparent',color:'#fff',opacity:.7,fontSize:18,cursor:'pointer'}}>×</button>
-    </div>
-  );
+  const dismiss = () => { localStorage.setItem(KEY, release.version!); setVisible(false); };
+  return <div role="status" aria-live="polite" className="releaseNotice">
+    <div><strong>Versi baru tersedia</strong><span>Puskesmas Somagede {release.version} sudah siap digunakan.</span></div>
+    <a href={release.playStoreUrl || 'https://play.google.com/store/apps/details?id=id.go.puskesmassomagede.portal'} target="_blank" rel="noopener noreferrer" onClick={dismiss}>Update</a>
+    <button type="button" onClick={dismiss} aria-label="Tutup">×</button>
+  </div>;
 }
