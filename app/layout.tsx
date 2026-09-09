@@ -1,6 +1,7 @@
 import './globals.css';
 import './boot.css';
 import './ui-enhancements.css';
+import './theme-fixes.css';
 import type { Metadata } from 'next';
 import LoadingScreen from '@/components/LoadingScreen';
 import SiteChrome from '@/components/SiteChrome';
