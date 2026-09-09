@@ -1,60 +1,11 @@
-:root{
-  color-scheme:light;
-  -webkit-text-size-adjust:100%;
-}
-
-html[data-theme='light']{
-  color-scheme:light;
-  --bg:#f5f7f7;
-  --ink:#13231f;
-  --muted:#64736f;
-  --line:#dfe8e4;
-  --brand:#108765;
-  --brand2:#0b6a51;
-  --mint:#e9f7f0;
-  --white:#fff;
-}
-
-html[data-theme='dark']{
-  color-scheme:dark;
-}
-
-/* Hero visual: the previous markup rendered without its layout styles, leaving a large empty panel. */
-.heroCard{position:relative;min-height:0}
-.heroArt{min-height:430px;display:grid;place-items:center;border:1px solid rgba(16,135,101,.12)}
-.centerSeal{position:absolute;inset:0;z-index:3;display:grid;place-items:center;pointer-events:none}
-.portalLogo{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;transform:translateY(-2px)}
-.portalLogo .puskesmasCrest{width:126px;height:126px;border-radius:30px;box-shadow:0 22px 55px rgba(0,0,0,.16),0 0 0 10px rgba(255,255,255,.12);object-fit:contain}
-.portalLogo>span{font-size:clamp(18px,2.8vw,28px);font-weight:900;letter-spacing:.11em;color:var(--ink);text-shadow:0 5px 24px rgba(255,255,255,.18)}
-.portalLogo>small{font-size:12px;letter-spacing:.28em;font-weight:800;color:var(--muted)}
-html[data-theme='dark'] .portalLogo>span{color:#e8f4ef;text-shadow:0 5px 24px rgba(0,0,0,.28)}
-html[data-theme='dark'] .portalLogo>small{color:#9bb0a8}
-
-.heroArt::after{content:"";position:absolute;inset:18%;border:1px solid rgba(67,210,166,.12);border-radius:50%;animation:heroRing 8s linear infinite}
-.heroOrb{z-index:1}
-.portalHalo{position:relative;display:grid;place-items:center;padding:16px;border-radius:40px;background:radial-gradient(circle,rgba(77,220,177,.14),rgba(77,220,177,0) 70%);animation:portalGlow 3s ease-in-out infinite}
-.portalHalo::before,.portalHalo::after{content:"";position:absolute;border:1px solid rgba(74,210,168,.24);border-radius:50%;pointer-events:none}
-.portalHalo::before{inset:-18px;animation:heroRing 7s linear infinite}
-.portalHalo::after{inset:-34px;border-style:dashed;opacity:.55;animation:heroRingReverse 11s linear infinite}
-.floatingBadge{position:absolute;right:22px;bottom:22px;z-index:5;display:inline-flex;align-items:center;gap:8px;padding:10px 13px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(8,38,29,.72);color:#eafff6;font-size:12px;font-weight:850;backdrop-filter:blur(14px);box-shadow:0 12px 28px rgba(0,0,0,.14)}
-
-/* Better visual hierarchy and touch feedback. */
-.statGrid .stat,.card,.operationalCard,.scheduleList div{will-change:transform}
-.btn:focus-visible,.themeToggle:focus-visible,.menu:focus-visible,.links a:focus-visible{outline:3px solid rgba(50,184,137,.35);outline-offset:3px}
-
-@keyframes heroRing{to{transform:rotate(360deg)}}
-@keyframes heroRingReverse{to{transform:rotate(-360deg)}}
-@keyframes portalGlow{0%,100%{transform:scale(.98);filter:brightness(.98)}50%{transform:scale(1.035);filter:brightness(1.12)}}
-
-@media(max-width:620px){
-  .heroArt{min-height:320px;height:320px}
-  .portalLogo .puskesmasCrest{width:92px;height:92px;border-radius:23px}
-  .portalLogo>span{font-size:17px;letter-spacing:.07em}
-  .portalLogo>small{font-size:9px;letter-spacing:.18em}
-  .floatingBadge{right:12px;bottom:12px}
-  .heroArt::after{inset:16%}
-}
-
-@media(prefers-reduced-motion:reduce){
-  .heroArt::after,.portalHalo,.portalHalo::before,.portalHalo::after{animation:none!important}
-}
+:root{color-scheme:light;-webkit-text-size-adjust:100%}
+html[data-theme='light']{color-scheme:light;--bg:#f5f7f7;--ink:#13231f;--muted:#64736f;--line:#dfe8e4;--brand:#108765;--brand2:#0b6a51;--mint:#e9f7f0;--white:#fff}
+html[data-theme='dark']{color-scheme:dark}
+.heroCard{position:relative;min-height:0}.heroArt{min-height:430px;display:grid;place-items:center;border:1px solid rgba(16,135,101,.12)}.centerSeal{position:absolute;inset:0;z-index:3;display:grid;place-items:center;pointer-events:none}.portalLogo{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;transform:translateY(-2px)}.portalLogo .puskesmasCrest{width:126px;height:126px;border-radius:30px;box-shadow:0 22px 55px rgba(0,0,0,.16),0 0 0 10px rgba(255,255,255,.12);object-fit:contain}.portalLogo>span{font-size:clamp(18px,2.8vw,28px);font-weight:900;letter-spacing:.11em;color:var(--ink);text-shadow:0 5px 24px rgba(255,255,255,.18)}.portalLogo>small{font-size:12px;letter-spacing:.28em;font-weight:800;color:var(--muted)}
+html[data-theme='dark'] .portalLogo>span{color:#e8f4ef;text-shadow:0 5px 24px rgba(0,0,0,.28)}html[data-theme='dark'] .portalLogo>small{color:#9bb0a8}
+.heroArt::after{content:"";position:absolute;inset:18%;border:1px solid rgba(67,210,166,.12);border-radius:50%;animation:heroRing 8s linear infinite}.heroOrb{z-index:1}.portalHalo{position:relative;display:grid;place-items:center;padding:16px;border-radius:40px;background:radial-gradient(circle,rgba(77,220,177,.14),rgba(77,220,177,0) 70%);animation:portalGlow 3s ease-in-out infinite}.portalHalo::before,.portalHalo::after{content:"";position:absolute;border:1px solid rgba(74,210,168,.24);border-radius:50%;pointer-events:none}.portalHalo::before{inset:-18px;animation:heroRing 7s linear infinite}.portalHalo::after{inset:-34px;border-style:dashed;opacity:.55;animation:heroRingReverse 11s linear infinite}.floatingBadge{position:absolute;right:22px;bottom:22px;z-index:5;display:inline-flex;align-items:center;gap:8px;padding:10px 13px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(8,38,29,.72);color:#eafff6;font-size:12px;font-weight:850;backdrop-filter:blur(14px);box-shadow:0 12px 28px rgba(0,0,0,.14)}
+.statGrid .stat,.card,.operationalCard,.scheduleList div{will-change:transform}.btn:focus-visible,.themeToggle:focus-visible,.menu:focus-visible,.links a:focus-visible{outline:3px solid rgba(50,184,137,.35);outline-offset:3px}.chatbotHero{padding-bottom:42px}.assistantHeroInner{max-width:900px}.assistantHeroInner h1{margin-bottom:14px}.assistantHeroInner h1 span{color:var(--brand)}.assistantSection{padding-top:32px}.assistantShell{max-width:900px;margin:0 auto;border:1px solid var(--line);border-radius:28px;background:var(--white);box-shadow:0 24px 70px rgba(18,52,41,.12);overflow:hidden}.chatHeader{display:flex;align-items:center;gap:13px;padding:18px 20px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,rgba(231,248,240,.85),rgba(255,255,255,.96))}.assistantAvatar{position:relative;width:44px;height:44px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(145deg,#108765,#0b6a51);color:#fff;box-shadow:0 8px 22px rgba(16,135,101,.22)}.assistantAvatar span{position:absolute;width:9px;height:9px;right:-1px;bottom:-1px;border:2px solid var(--white);border-radius:50%;background:#31c48d}.assistantIdentity{display:grid;gap:3px;flex:1}.assistantIdentity b{font-size:15px}.assistantIdentity span{font-size:12px;color:var(--muted)}.assistantIdentity i{display:inline-block;width:6px;height:6px;margin-right:5px;border-radius:50%;background:#31c48d}.chatReset{width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--line);border-radius:12px;background:var(--white);color:var(--muted);cursor:pointer;transition:.2s}.chatReset:hover{color:var(--brand);border-color:var(--brand);transform:rotate(-10deg)}.quickPrompts{display:flex;gap:8px;padding:14px 18px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}.quickPrompts::-webkit-scrollbar{display:none}.quickPrompts button{flex:0 0 auto;display:flex;align-items:center;gap:7px;padding:9px 11px;border:1px solid var(--line);border-radius:999px;background:var(--white);color:var(--ink);font-size:12px;font-weight:700;cursor:pointer;transition:.2s}.quickPrompts button:hover:not(:disabled){border-color:var(--brand);color:var(--brand);transform:translateY(-1px)}.quickPrompts button:disabled{opacity:.5;cursor:not-allowed}.chatMessages{min-height:390px;max-height:58vh;overflow-y:auto;padding:24px 22px;background:linear-gradient(180deg,rgba(246,251,248,.62),rgba(255,255,255,.98));scroll-behavior:smooth}.chatRow{display:flex;align-items:flex-start;gap:9px;margin-bottom:18px;animation:chatIn .28s ease both}.chatRow.user{flex-direction:row-reverse}.chatMiniAvatar{flex:0 0 auto;width:28px;height:28px;display:grid;place-items:center;border-radius:10px;background:var(--mint);color:var(--brand);font-size:7px;font-weight:850}.chatRow.user .chatMiniAvatar{background:#e7eeeB;color:#52645f}.chatMsg{max-width:min(78%,680px);display:grid;gap:8px}.chatBubble{padding:13px 15px;border-radius:17px 17px 17px 5px;background:var(--white);border:1px solid var(--line);color:var(--ink);box-shadow:0 5px 18px rgba(18,52,41,.06);font-size:14px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}.chatRow.user .chatBubble{border-radius:17px 17px 5px 17px;background:var(--brand);border-color:var(--brand);color:#fff;box-shadow:0 7px 20px rgba(16,135,101,.18)}.chatWhatsapp{justify-self:start;display:inline-flex;align-items:center;gap:7px;padding:9px 11px;border:1px solid var(--line);border-radius:11px;background:var(--white);color:var(--brand);font-size:12px;font-weight:800}.typing{display:flex;align-items:center;gap:4px;width:max-content;padding:12px 14px}.typing i{width:5px;height:5px;border-radius:50%;background:var(--brand);animation:typingDot 1s ease-in-out infinite}.typing i:nth-child(2){animation-delay:.14s}.typing i:nth-child(3){animation-delay:.28s}.typing span{margin-left:5px;color:var(--muted);font-size:11px}.chatComposerWrap{padding:14px 18px 12px;border-top:1px solid var(--line);background:var(--white)}.chatComposer{display:flex;align-items:center;gap:9px;padding:6px 6px 6px 15px;border:1px solid var(--line);border-radius:17px;background:var(--white);box-shadow:0 5px 18px rgba(18,52,41,.06);transition:.2s}.chatComposer:focus-within{border-color:#72c6aa;box-shadow:0 0 0 4px rgba(50,184,137,.1)}.chatComposer input{min-width:0;flex:1;border:0;outline:0;background:transparent;color:var(--ink);font-size:14px;padding:8px 0}.chatComposer input::placeholder{color:var(--muted)}.chatComposer button{flex:0 0 auto;width:42px;height:42px;border:0;border-radius:13px;background:var(--brand);color:#fff;display:grid;place-items:center;cursor:pointer;transition:.2s}.chatComposer button:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 18px rgba(16,135,101,.25)}.chatComposer button:disabled{opacity:.4;cursor:not-allowed}.composerHint{display:flex;align-items:center;gap:5px;margin-top:8px;padding:0 3px;color:var(--muted);font-size:10px}.assistantFootnote{max-width:900px;margin:12px auto 0;display:flex;justify-content:space-between;gap:14px;color:var(--muted);font-size:11px}.assistantFootnote span{display:inline-flex;align-items:center;gap:6px}
+html[data-theme='dark'] .assistantShell{box-shadow:0 24px 70px rgba(0,0,0,.32)}html[data-theme='dark'] .chatHeader{background:linear-gradient(135deg,#102a20,#0e1d18)}html[data-theme='dark'] .chatMessages{background:linear-gradient(180deg,#0b1914,#0e1d18)}html[data-theme='dark'] .chatRow.user .chatMiniAvatar{background:#163126;color:#a6c7ba}html[data-theme='dark'] .chatComposer{background:#0a1813}html[data-theme='dark'] .chatWhatsapp{background:#10241d}
+@keyframes heroRing{to{transform:rotate(360deg)}}@keyframes heroRingReverse{to{transform:rotate(-360deg)}}@keyframes portalGlow{0%,100%{transform:scale(.98);filter:brightness(.98)}50%{transform:scale(1.035);filter:brightness(1.12)}}@keyframes chatIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}@keyframes typingDot{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
+@media(max-width:620px){.heroArt{min-height:320px;height:320px}.portalLogo .puskesmasCrest{width:92px;height:92px;border-radius:23px}.portalLogo>span{font-size:17px;letter-spacing:.07em}.portalLogo>small{font-size:9px;letter-spacing:.18em}.floatingBadge{right:12px;bottom:12px}.heroArt::after{inset:16%}.assistantHeroInner h1{font-size:38px}.assistantHeroInner p{font-size:15px}.assistantSection{padding-top:20px}.assistantShell{border-radius:22px}.chatHeader{padding:15px}.quickPrompts{padding:11px 13px}.chatMessages{min-height:430px;max-height:none;height:calc(100svh - 365px);padding:18px 13px}.chatMsg{max-width:84%}.chatBubble{font-size:13px;padding:11px 13px}.chatComposerWrap{padding:11px 12px 10px}.chatComposer{border-radius:15px;padding-left:13px}.chatComposer button{width:40px;height:40px}.assistantFootnote{padding:0 2px;flex-direction:column;gap:5px;font-size:10px}.chatMiniAvatar{width:25px;height:25px;border-radius:9px}}
+@media(prefers-reduced-motion:reduce){.heroArt::after,.portalHalo,.portalHalo::before,.portalHalo::after,.chatRow,.typing i{animation:none!important}}
