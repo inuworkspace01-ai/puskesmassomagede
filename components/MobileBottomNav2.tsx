@@ -1,0 +1,3 @@
+'use client';
+import Link from 'next/link';
+export default function MobileBottomNav2(){return <nav className="mobileAppNav" aria-label="Navigasi aplikasi"><Link href="/"><span>⌂</span><small>Beranda</small></Link><Link href="/informasi"><span>▤</span><small>Informasi</small></Link><Link href="/layanan"><span>✚</span><small>Layanan</small></Link><Link href="/wilayah"><span>⌖</span><small>Wilayah</small></Link><Link href="/profil"><span>☰</span><small>Menu</small></Link></nav>};
