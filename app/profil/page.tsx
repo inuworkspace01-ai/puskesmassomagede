@@ -1,5 +1,5 @@
 import PageTransition from '@/components/PageTransition';
-import { HeartHandshake, Target, Users, ShieldCheck, Accessibility, Stethoscope, Leaf, ArrowRight } from 'lucide-react';
+import { HeartHandshake, Target, Users, ShieldCheck, Accessibility, Stethoscope, Leaf, ArrowRight, HeartPulse } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 
 const missions = [
@@ -26,11 +26,27 @@ export default function Profil(){
     <section className="section">
       <div className="container">
         <div className="visionCard">
-          <div className="visionVisual"><div className="visionOrb"/><Target size={30}/><span>Arah layanan</span></div>
+          <div className="visionVisual">
+            <div className="healthScene" aria-label="Ilustrasi tenaga kesehatan">
+              <div className="healthGrid" />
+              <div className="healthTeam">
+                <div className="healthPerson doctor">
+                  <div className="personHair"/><div className="personHead"/><div className="personBody"/><div className="personCollar"/><div className="personBadge"/>
+                  <div className="personArm left"/><div className="personArm right"/><div className="personLeg left"/><div className="personLeg right"/><div className="stethoscope"/>
+                </div>
+                <div className="healthPerson nurse">
+                  <div className="personHair"/><div className="personHead"/><div className="personBody"/><div className="personCollar"/><div className="personBadge"/>
+                  <div className="personArm left"/><div className="personArm right"/><div className="personLeg left"/><div className="personLeg right"/>
+                </div>
+              </div>
+              <HeartPulse className="sceneHeart" size={25}/>
+              <div className="sceneLabel">Tenaga kesehatan • melayani bersama</div>
+            </div>
+          </div>
           <div className="visionCopy">
             <div className="eyebrow">VISI</div>
             <h2>Terwujudnya masyarakat Kecamatan Somagede yang sehat, mandiri, dan mampu mengakses pelayanan kesehatan yang bermutu.</h2>
-            <p>Rumusan profil publik ini disusun berdasarkan arah tugas Puskesmas dan kerangka Renstra BLUD UPT Puskesmas Kabupaten Banyumas, bukan kutipan keputusan internal.</p>
+            <p>Rumusan profil publik ini disusun sebagai ringkasan arah pelayanan Puskesmas berdasarkan kerangka tugas dan perencanaan kesehatan daerah.</p>
           </div>
         </div>
       </div>
