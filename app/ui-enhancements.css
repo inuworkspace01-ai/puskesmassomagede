@@ -1,0 +1,77 @@
+/* Final UI/UX polish: motion, depth, touch targets, and mobile clarity. */
+.nav{box-shadow:0 8px 28px rgba(16,43,36,.06)}
+.navinner{position:relative}
+.links a{display:inline-flex;align-items:center;gap:6px;position:relative;transition:transform .2s ease,color .2s ease,opacity .2s ease}
+.links a::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:2px;border-radius:99px;background:var(--brand);transform:scaleX(0);transform-origin:center;transition:transform .2s ease}
+.links a:hover{transform:translateY(-1px)}
+.links a:hover::after,.links a.navActive::after{transform:scaleX(1)}
+.navActive{color:var(--brand)!important;font-weight:800}
+.navBot{padding:9px 12px;border:1px solid var(--line);border-radius:12px;background:var(--white)}
+.navBot:hover{border-color:var(--brand)}
+.hero{position:relative;overflow:hidden}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;pointer-events:none;filter:blur(12px);opacity:.45;z-index:-1}
+.hero::before{width:280px;height:280px;left:-130px;top:10px;background:rgba(40,183,140,.16);animation:uiFloat 8s ease-in-out infinite}
+.hero::after{width:360px;height:360px;right:-170px;bottom:-100px;background:rgba(65,145,116,.12);animation:uiFloat 10s ease-in-out infinite reverse}
+.hero h1 span{display:inline-block;color:var(--brand);text-shadow:0 8px 28px rgba(16,135,101,.14);animation:uiGlowText 3.8s ease-in-out infinite}
+.heroCard{overflow:hidden;transform:translateZ(0)}
+.heroCard:hover{transform:translateY(-4px);transition:transform .35s ease,box-shadow .35s ease;box-shadow:0 24px 70px rgba(18,52,41,.14)}
+.heroArt{isolation:isolate}
+.heroOrb{position:absolute;border-radius:50%;filter:blur(1px);opacity:.7;mix-blend-mode:screen}
+.heroOrb.orb1{width:150px;height:150px;left:8%;top:12%;background:radial-gradient(circle,rgba(255,255,255,.55),rgba(255,255,255,0));animation:uiOrb 7s ease-in-out infinite}
+.heroOrb.orb2{width:220px;height:220px;right:-3%;bottom:-8%;background:radial-gradient(circle,rgba(52,184,145,.24),rgba(52,184,145,0));animation:uiOrb 9s ease-in-out infinite reverse}
+.centerSeal{animation:uiBob 4.5s ease-in-out infinite}
+.portalHalo{animation:uiPulse 3.2s ease-in-out infinite}
+.floatingBadge{animation:uiBadge 3.5s ease-in-out infinite}
+.statGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:26px}
+.statGrid .stat{border-radius:17px;transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.statGrid .stat:hover{transform:translateY(-4px);border-color:#a8d7c6;box-shadow:0 14px 28px rgba(18,52,41,.08)}
+.tint{background:linear-gradient(180deg,rgba(231,248,240,.35),rgba(245,247,247,0))}
+.textLink{display:inline-flex;align-items:center;gap:6px;color:var(--brand);font-weight:800}
+.interactive{position:relative;overflow:hidden;transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease}
+.interactive::before{content:"";position:absolute;inset:-40% 50% auto auto;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(45,184,144,.16),rgba(45,184,144,0));transition:transform .35s ease}
+.interactive:hover{transform:translateY(-6px);border-color:#9fd1c1;box-shadow:0 18px 38px rgba(18,52,41,.1)}
+.interactive:hover::before{transform:scale(1.25)}
+.cardArrow{display:grid;place-items:center;width:32px;height:32px;margin-top:14px;border-radius:10px;background:var(--mint);color:var(--brand);transition:transform .25s ease}
+.interactive:hover .cardArrow{transform:translateX(4px)}
+.featureBand{position:relative;overflow:hidden;background:linear-gradient(135deg,#0f7d5f,#133f34);border-radius:28px;padding:34px;color:#fff;display:grid;grid-template-columns:1.1fr .9fr;gap:30px;box-shadow:0 22px 55px rgba(13,111,85,.2)}
+.featureBand::after{content:"";position:absolute;width:340px;height:340px;right:-120px;top:-160px;border:1px solid rgba(255,255,255,.12);border-radius:50%;box-shadow:0 0 0 30px rgba(255,255,255,.03),0 0 0 60px rgba(255,255,255,.02)}
+.featureBand h2{margin:10px 0 8px;font-size:clamp(28px,4vw,42px);letter-spacing:-.04em}
+.featureBand p{color:#d2e7df;max-width:620px;line-height:1.7}
+.featureBand .btn.primary{background:#fff;color:#0c654d;border-color:#fff;margin-top:12px}
+.chatPreview{align-self:center;justify-self:end;width:min(380px,100%);padding:18px;border:1px solid rgba(255,255,255,.14);border-radius:24px;background:rgba(255,255,255,.07);backdrop-filter:blur(14px);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.chatBubble{width:fit-content;max-width:88%;padding:12px 14px;border-radius:16px 16px 16px 5px;background:#fff;color:#1d3a31;font-size:13px;line-height:1.45;animation:uiChat 1s both}
+.chatBubble.alt{margin:10px 0 14px 12%;border-radius:16px 16px 5px 16px;background:#b9efd9;color:#0c4e3e;animation-delay:.15s}
+.chatInput{padding:11px 13px;border:1px solid rgba(255,255,255,.16);border-radius:13px;color:#9fc4b8;font-size:12px;background:rgba(0,0,0,.1)}
+.scheduleWidget{position:relative;overflow:hidden}
+.scheduleWidget::before{content:"";position:absolute;width:260px;height:260px;right:-140px;top:-140px;border-radius:50%;background:radial-gradient(circle,rgba(56,193,149,.16),rgba(56,193,149,0));pointer-events:none}
+.scheduleToday{box-shadow:0 12px 26px rgba(15,125,95,.16)}
+.scheduleCount{padding:8px 11px;border-radius:999px;background:var(--mint);color:var(--brand2);font-size:12px;font-weight:800;white-space:nowrap}
+.operationalCard{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.operationalCard:hover{transform:translateY(-3px);box-shadow:0 13px 28px rgba(18,52,41,.09);border-color:#abd7c8}
+.operationalInfo{min-width:0;flex:1}
+.newsMeta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.scheduleDot{opacity:.45}
+.taskBadge{display:inline-flex;align-items:center;gap:8px;margin-top:4px;padding:7px 10px;border-radius:10px;background:var(--mint);color:var(--brand2);font-size:12px;font-weight:850;letter-spacing:.01em}
+.taskBadge span{font-size:10px;text-transform:uppercase;letter-spacing:.09em;opacity:.68}
+.scheduleList div{transition:transform .2s ease,border-color .2s ease}
+.scheduleList div:hover{transform:translateY(-2px);border-color:#abd7c8}
+.btn,.themeToggle,.menu{touch-action:manipulation}
+.btn{transition:transform .2s ease,box-shadow .2s ease}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(18,52,41,.1)}
+.btn.primary:hover{box-shadow:0 12px 25px rgba(16,135,101,.25)}
+.feedbackSection,.contactCard,.heroCard,.card,.scheduleWidget{animation:uiReveal .65s both}
+@keyframes uiFloat{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(20px,-16px,0)}}
+@keyframes uiGlowText{0%,100%{filter:brightness(1)}50%{filter:brightness(1.13)}}
+@keyframes uiOrb{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(14px,-12px,0) scale(1.08)}}
+@keyframes uiBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes uiPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
+@keyframes uiBadge{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-5px) rotate(-1deg)}}
+@keyframes uiChat{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+@keyframes uiReveal{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media(max-width:900px){.statGrid{grid-template-columns:repeat(2,1fr)}.featureBand{grid-template-columns:1fr}}
+@media(max-width:620px){.nav{position:sticky}.navinner{min-height:68px}.links.open{top:68px}.links a::after{display:none}.navBot{justify-content:center}.hero{padding-top:30px}.statGrid{gap:8px}.statGrid .stat{padding:15px}.statGrid .stat strong{font-size:23px}.heroCard{padding:15px;border-radius:23px}.heroArt{height:300px}.featureBand{padding:24px 19px;border-radius:22px}.chatPreview{justify-self:stretch}.scheduleWidget{padding:18px}.operationalCard{padding:14px}.taskBadge{max-width:100%;flex-wrap:wrap}.scheduleCount{align-self:flex-start}}
+@media(prefers-reduced-motion:reduce){.hero::before,.hero::after,.hero h1 span,.heroOrb,.centerSeal,.portalHalo,.floatingBadge,.feedbackSection,.contactCard,.heroCard,.card,.scheduleWidget,.chatBubble,.chatBubble.alt,.bootSplash,.bootCenter{animation:none!important}.interactive:hover,.operationalCard:hover,.scheduleList div:hover,.btn:hover,.heroCard:hover{transform:none}}
+html[data-theme='dark'] .links a::after{background:var(--brand2)}
+html[data-theme='dark'] .navBot{background:#10241d}
+html[data-theme='dark'] .heroCard:hover,html[data-theme='dark'] .interactive:hover,html[data-theme='dark'] .operationalCard:hover{box-shadow:0 18px 40px rgba(0,0,0,.25)}
+html[data-theme='dark'] .tint{background:linear-gradient(180deg,rgba(18,58,45,.28),rgba(8,19,15,0))}
