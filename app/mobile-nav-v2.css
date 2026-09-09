@@ -1,0 +1,3 @@
+@media(max-width:760px){.menu{display:none!important}.floatingChat{bottom:88px!important;right:16px!important;z-index:160!important}.floatingChatLabel{display:none!important}.floatingChatIcon{width:54px!important;height:54px!important}.floatingChatPulse{width:54px!important;height:54px!important}.navinner{padding-bottom:0!important}.mobileBottomNav{bottom:max(10px,env(safe-area-inset-bottom));}
+}
+@media(min-width:761px){.mobile-nav-v2{display:none!important}}
