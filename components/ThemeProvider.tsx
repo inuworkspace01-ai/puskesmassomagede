@@ -3,23 +3,35 @@
 import {createContext,useContext,useEffect,useState} from 'react';
 
 type Theme='light'|'dark';
-const ThemeContext=createContext<{theme:Theme;toggleTheme:()=>void}>({theme:'light',toggleTheme:()=>{}});
+
+type ThemeContextValue={theme:Theme;toggleTheme:()=>void};
+const ThemeContext=createContext<ThemeContextValue>({theme:'light',toggleTheme:()=>{}});
+
+function getInitialTheme():Theme{
+  if(typeof window==='undefined') return 'light';
+  try{
+    const saved=localStorage.getItem('somagede-theme');
+    if(saved==='dark'||saved==='light') return saved;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+  }catch{return 'light';}
+}
+
+function applyTheme(theme:Theme){
+  document.documentElement.dataset.theme=theme;
+  document.documentElement.style.colorScheme=theme;
+}
 
 export default function ThemeProvider({children}:{children:React.ReactNode}){
-  const [theme,setTheme]=useState<Theme>('light');
+  const [theme,setTheme]=useState<Theme>(getInitialTheme);
+
   useEffect(()=>{
-    const saved=localStorage.getItem('somagede-theme') as Theme|null;
-    const preferred=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
-    const next=saved==='dark'||saved==='light'?saved:preferred;
-    setTheme(next);
-    document.documentElement.dataset.theme=next;
-  },[]);
-  const toggleTheme=()=>setTheme(current=>{
-    const next=current==='dark'?'light':'dark';
-    localStorage.setItem('somagede-theme',next);
-    document.documentElement.dataset.theme=next;
-    return next;
-  });
+    applyTheme(theme);
+    try{localStorage.setItem('somagede-theme',theme);}catch{}
+  },[theme]);
+
+  const toggleTheme=()=>setTheme(current=>current==='dark'?'light':'dark');
+
   return <ThemeContext.Provider value={{theme,toggleTheme}}>{children}</ThemeContext.Provider>;
 }
+
 export const useTheme=()=>useContext(ThemeContext);
