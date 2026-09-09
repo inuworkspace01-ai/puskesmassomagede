@@ -1,1 +1,40 @@
-import './globals.css';import type {Metadata} from 'next';import LoadingScreen from '@/components/LoadingScreen';import SiteChrome from '@/components/SiteChrome';import PWARegister from '@/components/PWARegister';import ThemeProvider from '@/components/ThemeProvider';export const metadata:Metadata={title:'Puskesmas Somagede | Portal Informasi',description:'Portal informasi dan layanan publik Puskesmas Somagede, Kabupaten Banyumas.',manifest:'/manifest.webmanifest',themeColor:[{media:'(prefers-color-scheme: light)',color:'#108765'},{media:'(prefers-color-scheme: dark)',color:'#071a14'}],icons:{icon:'/assets/logo-puskesmas-somagede.jpeg',apple:'/assets/logo-puskesmas-somagede.jpeg'},appleWebApp:{capable:true,title:'Puskesmas Somagede',statusBarStyle:'default'}};export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="id" suppressHydrationWarning><body><ThemeProvider><LoadingScreen/><PWARegister/><SiteChrome>{children}</SiteChrome></ThemeProvider></body></html>}
+import './globals.css';
+import './boot.css';
+import type { Metadata } from 'next';
+import LoadingScreen from '@/components/LoadingScreen';
+import SiteChrome from '@/components/SiteChrome';
+import PWARegister from '@/components/PWARegister';
+import ThemeProvider from '@/components/ThemeProvider';
+
+export const metadata: Metadata = {
+  title: 'Puskesmas Somagede | Portal Informasi',
+  description: 'Portal informasi dan layanan publik Puskesmas Somagede, Kabupaten Banyumas.',
+  manifest: '/manifest.webmanifest',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#108765' },
+    { media: '(prefers-color-scheme: dark)', color: '#071a14' },
+  ],
+  icons: {
+    icon: '/assets/logo-puskesmas-somagede.jpeg',
+    apple: '/assets/logo-puskesmas-somagede.jpeg',
+  },
+  appleWebApp: {
+    capable: true,
+    title: 'Puskesmas Somagede',
+    statusBarStyle: 'default',
+  },
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="id" suppressHydrationWarning>
+      <body>
+        <ThemeProvider>
+          <LoadingScreen />
+          <PWARegister />
+          <SiteChrome>{children}</SiteChrome>
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}
