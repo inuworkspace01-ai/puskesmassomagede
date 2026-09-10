@@ -20,7 +20,7 @@ export default function MobileBottomNav(){
     <nav className="mobileAppNav" aria-label="Navigasi utama aplikasi">
       <Link href="/" className={active('/')?'isActive':''}><Home size={20}/><span>Beranda</span></Link>
       <Link href="/informasi" className={active('/informasi')?'isActive':''}><Newspaper size={20}/><span>Informasi</span></Link>
-      <Link href="/layanan" className={active('/layanan')?'isActive':''}><Stethoscope size={20}/><span>Layanan</span></Link>
+      <Link href="/layanan" className={active('/layanan')?'isActive':''}><Stethoscope size={20}/><span>Pelayanan</span></Link>
       <Link href="/wilayah" className={active('/wilayah')?'isActive':''}><MapPinned size={20}/><span>Wilayah</span></Link>
       <button type="button" className={open?'isActive':''} aria-expanded={open} onClick={()=>setOpen(v=>!v)}>{open?<X size={20}/>:<MoreHorizontal size={20}/>}<span>Menu</span></button>
     </nav>
