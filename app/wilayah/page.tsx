@@ -42,7 +42,6 @@ function projectRoute(route: GeoPoint[], target: { x: number; y: number }) {
   const nx = -ty;
   const ny = tx;
   const lateralScale = Math.max(targetLen * 0.7, 8);
-
   return route.map((point, index) => {
     const dx = point[0] - start[0];
     const dy = point[1] - start[1];
@@ -61,149 +60,32 @@ export default function Wilayah() {
   const [routeDuration, setRouteDuration] = useState<number | null>(null);
   const [routeState, setRouteState] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
   const active = selected === null ? null : villages[selected];
-
   useEffect(() => {
-    if (selected === null) {
-      setRoute([]);
-      setRouteDistance(null);
-      setRouteDuration(null);
-      setRouteState('idle');
-      return;
-    }
+    if (selected === null) { setRoute([]); setRouteDistance(null); setRouteDuration(null); setRouteState('idle'); return; }
     const controller = new AbortController();
     const destination = villages[selected].coord;
-    setRouteState('loading');
-    setRoute([]);
-    setRouteDistance(null);
-    setRouteDuration(null);
-
+    setRouteState('loading'); setRoute([]); setRouteDistance(null); setRouteDuration(null);
     const url = `https://router.project-osrm.org/route/v1/driving/${origin[0]},${origin[1]};${destination[0]},${destination[1]}?overview=full&geometries=geojson&steps=false`;
-    fetch(url, { signal: controller.signal, cache: 'no-store' })
-      .then(async (res) => {
-        if (!res.ok) throw new Error(`Routing ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
-        const first = data?.routes?.[0];
-        const coordinates = first?.geometry?.coordinates as GeoPoint[] | undefined;
-        if (!coordinates?.length) throw new Error('No route');
-        setRoute(coordinates);
-        setRouteDistance(Number(first.distance) || null);
-        setRouteDuration(Number(first.duration) || null);
-        setRouteState('ready');
-      })
-      .catch((error) => {
-        if (error?.name !== 'AbortError') setRouteState('error');
-      });
-
+    fetch(url, { signal: controller.signal, cache: 'no-store' }).then(async (res) => { if (!res.ok) throw new Error(`Routing ${res.status}`); return res.json(); }).then((data) => {
+      const first = data?.routes?.[0];
+      const coordinates = first?.geometry?.coordinates as GeoPoint[] | undefined;
+      if (!coordinates?.length) throw new Error('No route');
+      setRoute(coordinates); setRouteDistance(Number(first.distance) || null); setRouteDuration(Number(first.duration) || null); setRouteState('ready');
+    }).catch((error) => { if (error?.name !== 'AbortError') setRouteState('error'); });
     return () => controller.abort();
   }, [selected]);
-
   const routePath = useMemo(() => active && route.length > 1 ? projectRoute(route, active.visual) : '', [active, route]);
   const formatDistance = (meters: number | null) => meters === null ? '—' : meters < 1000 ? `${Math.round(meters)} m` : `${(meters / 1000).toFixed(1)} km`;
   const formatDuration = (seconds: number | null) => seconds === null ? '—' : `${Math.max(1, Math.round(seconds / 60))} menit`;
-
-  return (
-    <PageTransition>
-      <main>
-        <section className="pageHero regionHero">
-          <div className="container">
-            <div className="eyebrow"><MapPin size={15} /> WILAYAH KERJA</div>
-            <h1>9 desa, satu wilayah pelayanan.</h1>
-            <p>Visual 3D tetap ringan, tetapi garis perjalanan sekarang dihitung berdasarkan jaringan jalan sehingga tidak lagi berupa garis lurus menembus area.</p>
-          </div>
-        </section>
-
-        <section className="section">
-          <div className="container">
-            <div className="mapShell3d">
-              <div className="mapCopy3d">
-                <div className="eyebrow">REAL ROAD ROUTING</div>
-                <div className="mapTitleRow">
-                  <div>
-                    <h2>Puskesmas → Balai Desa.</h2>
-                    <p>Klik desa untuk mengambil rute jalan dari Puskesmas dan menampilkannya di panel 3D. Navigasi akhirnya tetap dibuka di Google Maps.</p>
-                  </div>
-                  <div className="mapBadge"><LocateFixed size={15} /> 9 desa</div>
-                </div>
-
-                <div className="mapActions">
-                  <a className="btn primary" href={mapsSearch('Puskesmas Somagede, Banyumas')} target="_blank" rel="noreferrer"><Navigation size={17} /> Lokasi Puskesmas</a>
-                  <a className="btn secondary" href={mapsSearch('Balai Desa Somagede, Somagede, Banyumas')} target="_blank" rel="noreferrer"><Building2 size={16} /> Cari Balai Desa</a>
-                </div>
-
-                <div className="mapLegend">
-                  <span><i className="legendDot" /> Jalur jalan</span>
-                  <span><Layers3 size={14} /> Visual 3D</span>
-                  <span><Compass size={14} /> Google Maps</span>
-                </div>
-
-                {active && (
-                  <div className="mapRouteInfo" key={`route-info-${active.name}`}>
-                    <div>
-                      <strong>{routeState === 'loading' ? 'Mengambil rute jalan…' : `Puskesmas → Balai Desa ${active.name}`}</strong>
-                      <span>{routeState === 'ready' ? `${formatDistance(routeDistance)} · estimasi ${formatDuration(routeDuration)}` : routeState === 'error' ? 'Rute tidak tersedia. Buka Google Maps untuk navigasi langsung.' : 'Menghubungkan ke jaringan jalan…'}</span>
-                    </div>
-                    <a className="btn primary" href={mapsDirections(active.query)} target="_blank" rel="noreferrer">Navigasi <ArrowUpRight size={14} /></a>
-                  </div>
-                )}
-              </div>
-
-              <div className="mapStage">
-                <div className="mapPlatform">
-                  <div className="mapCanvas3d">
-                    <div className="mapHud">
-                      <span className="mapHudChip"><Layers3 size={12} /> HEALTH MAP</span>
-                      <span className="mapCompass"><Compass size={15} /></span>
-                    </div>
-
-                    <div className="mapTerrain">
-                      <div className="road r1" /><div className="road r2" /><div className="road r3" /><div className="road r4" />
-
-                      {routePath && (
-                        <svg key={`route-svg-${selected}`} className="mapRouteLayer" viewBox="0 0 100 100" preserveAspectRatio="none" width="100%" height="100%" aria-hidden="true">
-                          <path className="mapRouteGlow" d={routePath} />
-                          <path className="mapRouteLine" d={routePath} />
-                          <circle className="mapRouteRunner" r="1.8">
-                            <animateMotion key={`runner-${selected}`} dur="1.65s" fill="freeze" repeatCount="1" path={routePath} />
-                          </circle>
-                        </svg>
-                      )}
-
-                      {villages.map((v, index) => (
-                        <button key={v.name} type="button" className={`mapPin mapPinButton p${index + 1} ${selected === index ? 'isSelected' : ''}`} style={{ left: `${v.visual.x}%`, top: `${v.visual.y}%` }} onClick={() => setSelected(index)} aria-label={`Tampilkan rute ke Balai Desa ${v.name}`}>
-                          <span className="mapPinDot" />
-                          <span className="mapPinLabel"><Building2 size={10} /> {v.name}</span>
-                        </button>
-                      ))}
-
-                      <div className="mapCore"><Stethoscope size={26} /><span>PUSKESMAS</span></div>
-                      {active && <div key={`pulse-${active.name}`} className="mapRoutePulse" style={{ left: `${active.visual.x}%`, top: `${active.visual.y}%` }} />}
-                    </div>
-                    <div className="mapFallbackNote">{routeState === 'loading' ? 'Menghitung rute jalan…' : 'Klik titik Balai Desa untuk melihat rute nyata'}</div>
-                  </div>
-                </div>
-                <div className="mapFloorGlow" />
-              </div>
-            </div>
-
-            <div className="villageHeader">
-              <div><div className="eyebrow">DESA WILAYAH KERJA</div><h2>Pilih desa tujuan</h2></div>
-              <span>9 lokasi</span>
-            </div>
-
-            <div className="villageGrid3d">
-              {villages.map((v, index) => (
-                <button type="button" className="villageCard mapCardAction" key={v.name} onClick={() => setSelected(index)}>
-                  <div className="villageNumber">{String(index + 1).padStart(2, '0')}</div>
-                  <div className="villageText"><b>Desa {v.name}</b><span>Balai desa · tampilkan rute jalan</span></div>
-                  <ExternalLink size={17} />
-                </button>
-              ))}
-            </div>
-          </div>
-        </section>
-      </main>
-    </PageTransition>
-  );
+  return <PageTransition><main>
+    <section className="pageHero regionHero"><div className="container"><div className="eyebrow"><MapPin size={15} /> WILAYAH KERJA</div><h1>9 desa dalam satu wilayah pelayanan.</h1><p>Puskesmas Somagede melayani masyarakat di wilayah Kecamatan Somagede yang terdiri atas sembilan desa: Kanding, Kemawi, Klinting, Piasa Kulon, Plana, Sokawera, Somagede, Somakaton, dan Tanggeran.</p></div></section>
+    <section className="section"><div className="container"><div className="mapShell3d">
+      <div className="mapCopy3d"><div className="eyebrow">PETA WILAYAH & RUTE</div><div className="mapTitleRow"><div><h2>Puskesmas menuju Balai Desa.</h2><p>Pilih salah satu desa untuk melihat estimasi rute jalan dari Puskesmas Somagede. Jalur pada visual mengikuti data jaringan jalan, sedangkan navigasi perjalanan dibuka melalui Google Maps.</p></div><div className="mapBadge"><LocateFixed size={15} /> 9 desa</div></div>
+        <div className="mapActions"><a className="btn primary" href={mapsSearch('Puskesmas Somagede, Banyumas')} target="_blank" rel="noreferrer"><Navigation size={17} /> Lokasi Puskesmas</a><a className="btn secondary" href={mapsSearch('Balai Desa Somagede, Somagede, Banyumas')} target="_blank" rel="noreferrer"><Building2 size={16} /> Cari Balai Desa</a></div>
+        <div className="mapLegend"><span><i className="legendDot" /> Jalur jalan</span><span><Layers3 size={14} /> Visual 3D</span><span><Compass size={14} /> Google Maps</span></div>
+        {active && <div className="mapRouteInfo" key={`route-info-${active.name}`}><div><strong>{routeState === 'loading' ? 'Mengambil rute jalan…' : `Puskesmas → Balai Desa ${active.name}`}</strong><span>{routeState === 'ready' ? `${formatDistance(routeDistance)} · estimasi ${formatDuration(routeDuration)}` : routeState === 'error' ? 'Rute tidak tersedia. Gunakan Google Maps untuk navigasi langsung.' : 'Menghubungkan ke jaringan jalan…'}</span></div><a className="btn primary" href={mapsDirections(active.query)} target="_blank" rel="noreferrer">Navigasi <ArrowUpRight size={14} /></a></div>}
+      </div>
+      <div className="mapStage"><div className="mapPlatform"><div className="mapCanvas3d"><div className="mapHud"><span className="mapHudChip"><Layers3 size={12} /> HEALTH MAP</span><span className="mapCompass"><Compass size={15} /></span></div><div className="mapTerrain"><div className="road r1" /><div className="road r2" /><div className="road r3" /><div className="road r4" />{routePath && <svg key={`route-svg-${selected}`} className="mapRouteLayer" viewBox="0 0 100 100" preserveAspectRatio="none" width="100%" height="100%" aria-hidden="true"><path className="mapRouteGlow" d={routePath} /><path className="mapRouteLine" d={routePath} /><circle className="mapRouteRunner" r="1.8"><animateMotion key={`runner-${selected}`} dur="1.65s" fill="freeze" repeatCount="1" path={routePath} /></circle></svg>}{villages.map((v, index) => <button key={v.name} type="button" className={`mapPin mapPinButton p${index + 1} ${selected === index ? 'isSelected' : ''}`} style={{ left: `${v.visual.x}%`, top: `${v.visual.y}%` }} onClick={() => setSelected(index)} aria-label={`Tampilkan rute ke Balai Desa ${v.name}`}><span className="mapPinDot" /><span className="mapPinLabel"><Building2 size={10} /> {v.name}</span></button>)}<div className="mapCore"><Stethoscope size={26} /><span>PUSKESMAS</span></div>{active && <div key={`pulse-${active.name}`} className="mapRoutePulse" style={{ left: `${active.visual.x}%`, top: `${active.visual.y}%` }} />}</div><div className="mapFallbackNote">{routeState === 'loading' ? 'Menghitung rute jalan…' : 'Pilih titik desa untuk melihat jalur rute'}</div></div></div><div className="mapFloorGlow" /></div>
+    </div><div className="villageHeader"><div><div className="eyebrow">DESA WILAYAH KERJA</div><h2>Pilih desa tujuan</h2><p>Setiap kartu mewakili lokasi Balai Desa yang menjadi titik tujuan pada visual rute.</p></div><span>9 lokasi</span></div><div className="villageGrid3d">{villages.map((v,index)=><button type="button" className="villageCard mapCardAction" key={v.name} onClick={()=>setSelected(index)}><div className="villageNumber">{String(index+1).padStart(2,'0')}</div><div className="villageText"><b>Desa {v.name}</b><span>Balai desa · lihat rute jalan</span></div><ExternalLink size={17}/></button>)}</div></div></section>
+  </main></PageTransition>;
 }
