@@ -4,71 +4,34 @@ import { useEffect, useState, type CSSProperties } from 'react';
 
 const LOGO_SRC = '/assets/logo-puskesmas-somagede.jpeg?v=20260911';
 
-type SupportItem = {
-  key: string;
-  label: string;
-  file: string;
-  fallback: string;
-};
+const support = [
+  { key: 'banyumas', label: 'Kabupaten Banyumas', src: '/assets/loading-support/banyumas-logo.svg' },
+  { key: 'germas', label: 'GERMAS', src: '/assets/loading-support/germas-logo.svg' },
+  { key: 'kemenkes', label: 'Kementerian Kesehatan', src: '/assets/loading-support/kemenkes-logo.svg' },
+  { key: 'dinkominfo', label: 'Dinkominfo Banyumas', src: '/assets/loading-support/dinkominfo-logo.svg' },
+] as const;
 
-const support: SupportItem[] = [
-  { key: 'banyumas', label: 'Kabupaten Banyumas', file: 'banyumas.webp.b64', fallback: 'B' },
-  { key: 'germas', label: 'GERMAS', file: 'germas.jpg.b64', fallback: 'G' },
-  { key: 'kemenkes', label: 'Kementerian Kesehatan', file: 'kemenkes.jpg.b64', fallback: 'K' },
-  { key: 'dinkominfo', label: 'Dinkominfo Banyumas', file: 'dinkominfo.jpg.b64', fallback: 'DI' },
-];
-
-function base64ToObjectUrl(value: string, mime: string) {
-  const clean = value.replace(/^data:[^;]+;base64,/, '').replace(/\s+/g, '');
-  const binary = atob(clean);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
-  return URL.createObjectURL(new Blob([bytes], { type: mime }));
+function SupportLogo({ src, alt }: { src: string; alt: string }) {
+  return <img src={src} alt={alt} className="bootSupportLogo" width={150} height={54} loading="eager" decoding="async" />;
 }
 
 export default function LoadingScreen() {
   const [visible, setVisible] = useState(true);
   const [progress, setProgress] = useState(0);
   const [logoReady, setLogoReady] = useState(false);
-  const [supportSrc, setSupportSrc] = useState<Record<string, string>>({});
+  const [logoFailed, setLogoFailed] = useState(false);
 
   useEffect(() => {
     const preload = new Image();
     preload.decoding = 'sync';
     preload.src = LOGO_SRC;
     const done = () => setLogoReady(true);
+    const fail = () => setLogoFailed(true);
     preload.addEventListener('load', done);
-    return () => preload.removeEventListener('load', done);
-  }, []);
-
-  useEffect(() => {
-    let alive = true;
-    const created: string[] = [];
-
-    const loadSupport = async () => {
-      const entries: Record<string, string> = {};
-      await Promise.all(
-        support.map(async (item) => {
-          try {
-            const response = await fetch(`/assets/loading-support/${item.file}`, { cache: 'force-cache' });
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const text = await response.text();
-            const mime = item.file.endsWith('.webp.b64') ? 'image/webp' : 'image/jpeg';
-            const objectUrl = base64ToObjectUrl(text, mime);
-            created.push(objectUrl);
-            entries[item.key] = objectUrl;
-          } catch {
-            // Keep the polished monogram fallback instead of ever showing a broken image icon.
-          }
-        }),
-      );
-      if (alive) setSupportSrc(entries);
-    };
-
-    void loadSupport();
+    preload.addEventListener('error', fail);
     return () => {
-      alive = false;
-      created.forEach((url) => URL.revokeObjectURL(url));
+      preload.removeEventListener('load', done);
+      preload.removeEventListener('error', fail);
     };
   }, []);
 
@@ -107,16 +70,23 @@ export default function LoadingScreen() {
         <div className={`bootLogoShell${logoReady ? ' logoReady' : ''}`}>
           <div className="bootLogoOrbit" aria-hidden="true" />
           <div className="bootLogoCard">
-            <img
-              src={LOGO_SRC}
-              alt="Logo Puskesmas Somagede"
-              width={96}
-              height={96}
-              loading="eager"
-              decoding="sync"
-              fetchPriority="high"
-              onLoad={() => setLogoReady(true)}
-            />
+            {logoFailed ? (
+              <div className="bootPuskesmasFallback" aria-label="Logo Puskesmas Somagede" role="img">
+                <span>♥</span><b>PUSKESMAS</b><strong>SOMAGEDE</strong>
+              </div>
+            ) : (
+              <img
+                src={LOGO_SRC}
+                alt="Logo Puskesmas Somagede"
+                width={96}
+                height={96}
+                loading="eager"
+                decoding="sync"
+                fetchPriority="high"
+                onLoad={() => setLogoReady(true)}
+                onError={() => setLogoFailed(true)}
+              />
+            )}
           </div>
         </div>
 
@@ -132,22 +102,15 @@ export default function LoadingScreen() {
         <div className={`bootSupport${done ? ' isVisible' : ''}`} aria-hidden={!done}>
           <div className="bootSupportTitle"><span className="bootSupportRule" /><span>DIDUKUNG OLEH</span><span className="bootSupportRule" /></div>
           <div className="bootSupportGrid">
-            {support.map((item, index) => {
-              const src = supportSrc[item.key];
-              return (
-                <div className="bootSupportItem isLoaded" key={item.key} style={{ '--support-delay': `${index * 120}ms` } as CSSProperties}>
-                  <div className="bootSupportHalo" />
-                  <div className="bootSupportLogoFrame">
-                    {src ? (
-                      <img src={src} alt={item.label} className="bootSupportLogo" loading="eager" decoding="async" />
-                    ) : (
-                      <div className="bootSupportMark" aria-hidden="true">{item.fallback}</div>
-                    )}
-                  </div>
-                  <span>{item.label}</span>
+            {support.map((item, index) => (
+              <div className="bootSupportItem isLoaded" key={item.key} style={{ '--support-delay': `${index * 120}ms` } as CSSProperties}>
+                <div className="bootSupportHalo" />
+                <div className="bootSupportLogoFrame">
+                  <SupportLogo src={item.src} alt={item.label} />
                 </div>
-              );
-            })}
+                <span>{item.label}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
