@@ -1,4 +1,4 @@
-/* Loading screen reliability + smoother logo motion */
+/* Loading screen reliability + smooth logo motion */
 .bootSplash{backface-visibility:hidden;-webkit-font-smoothing:antialiased}
 .bootCenter{will-change:transform,opacity}
 .bootLogoShell{position:relative;isolation:isolate;will-change:transform,opacity;animation:logoShellIn 1.05s cubic-bezier(.16,1,.3,1) .12s both}
@@ -9,20 +9,20 @@
 .bootLogoOrbit{position:absolute;z-index:1;inset:-20px;border-radius:50%;border:1px solid rgba(109,229,190,.18);box-shadow:0 0 40px rgba(71,220,173,.08);pointer-events:none;animation:orbitPulse 3.2s ease-in-out infinite}
 .bootLogoOrbit:before,.bootLogoOrbit:after{content:"";position:absolute;border-radius:50%;border:1px solid rgba(109,229,190,.09)}
 .bootLogoOrbit:before{inset:12px}.bootLogoOrbit:after{inset:-12px;opacity:.6}
+.bootPuskesmasFallback{width:78%;height:78%;min-width:70px;min-height:70px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#0a7559;line-height:.9;text-align:center;border:2px solid rgba(16,135,101,.14);border-radius:18px;background:linear-gradient(145deg,#fff,#e9fff7);box-shadow:inset 0 0 0 5px rgba(16,135,101,.04)}
+.bootPuskesmasFallback span{font-size:22px;color:#19a477;line-height:1}
+.bootPuskesmasFallback b{font-size:7px;letter-spacing:.12em}.bootPuskesmasFallback strong{font-size:10px;letter-spacing:.08em}
+.bootSupportLogoFrame{position:relative;z-index:2;width:100%;height:54px;display:grid;place-items:center;overflow:hidden}
+.bootSupportLogo{position:relative;z-index:2;width:min(100%,150px);height:54px;object-fit:contain;display:block;filter:drop-shadow(0 3px 8px rgba(0,0,0,.18))}
 .bootTrack i{will-change:transform;transition:transform .18s cubic-bezier(.22,1,.36,1)}
 .bootSplash.bootDone{transition:opacity 1s cubic-bezier(.22,1,.36,1),visibility 1s linear}
 .bootSupportGrid{grid-template-columns:repeat(4,minmax(0,1fr))}
 .bootSupportItem{position:relative;min-width:0}
-.bootSupportMark{position:relative;z-index:2;width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(222,249,239,.92));border:1px solid rgba(157,238,214,.22);color:#0c6f56;box-shadow:0 8px 20px rgba(0,0,0,.14),inset 0 1px rgba(255,255,255,.8);font-size:14px;font-weight:950;letter-spacing:-.04em;text-shadow:0 1px 0 rgba(255,255,255,.7);animation:supportMarkIn .65s cubic-bezier(.22,1,.36,1) var(--support-delay) both}
-.bootSupportItem:nth-child(2) .bootSupportMark{border-radius:50%;color:#0a8b65;font-size:18px}
-.bootSupportItem:nth-child(3) .bootSupportMark{background:linear-gradient(145deg,#fff,#e8f2ff);color:#2463a5}
-.bootSupportItem:nth-child(4) .bootSupportMark{background:linear-gradient(145deg,#fff,#edf1ff);color:#5364b8;font-size:11px}
 .bootSupportItem span{max-width:100%}
 @keyframes logoShellIn{0%{opacity:0;transform:translateY(18px) scale(.82)}55%{opacity:1;transform:translateY(-3px) scale(1.035)}100%{opacity:1;transform:none}}
 @keyframes logoImageIn{0%{opacity:0;transform:scale(.7) rotate(-5deg);filter:blur(5px)}60%{opacity:1;transform:scale(1.04) rotate(1deg);filter:blur(0)}100%{opacity:1;transform:scale(1) rotate(0);filter:blur(0)}}
 @keyframes logoCardFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-5px) scale(1.008)}}
 @keyframes logoGlow{0%,100%{opacity:.55;transform:scale(.96)}50%{opacity:1;transform:scale(1.04)}}
 @keyframes orbitPulse{0%,100%{transform:scale(.94);opacity:.55}50%{transform:scale(1.04);opacity:1}}
-@keyframes supportMarkIn{0%{opacity:0;transform:translateY(8px) scale(.85)}70%{opacity:1;transform:translateY(-1px) scale(1.03)}100%{opacity:1;transform:none}}
-@media(max-width:560px){.bootSupportGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.bootSupportMark{width:38px;height:38px;font-size:13px}}
-@media(prefers-reduced-motion:reduce){.bootLogoShell,.bootLogoCard,.bootLogoCard img,.bootLogoCard:before,.bootLogoOrbit,.bootTrack i,.bootSupportMark{animation:none!important;transition:none!important}.bootLogoShell{opacity:1;transform:none}.bootLogoCard img{opacity:1;transform:none;filter:none}.bootSupportMark{opacity:1;transform:none}}
+@media(max-width:560px){.bootSupportGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.bootSupportLogoFrame{height:46px}.bootSupportLogo{height:46px;width:min(100%,145px)}.bootPuskesmasFallback{min-width:62px;min-height:62px}.bootPuskesmasFallback span{font-size:18px}.bootPuskesmasFallback b{font-size:6px}.bootPuskesmasFallback strong{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.bootLogoShell,.bootLogoCard,.bootLogoCard img,.bootLogoCard:before,.bootLogoOrbit,.bootTrack i{animation:none!important;transition:none!important}.bootLogoShell{opacity:1;transform:none}.bootLogoCard img{opacity:1;transform:none;filter:none}}
