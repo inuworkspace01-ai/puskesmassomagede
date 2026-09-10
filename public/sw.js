@@ -1,9 +1,9 @@
-const CACHE='somagede-pwa-v10';
+const CACHE='somagede-pwa-v11';
 
 self.addEventListener('install',event=>{
   event.waitUntil(
     caches.open(CACHE)
-      .then(cache=>cache.addAll(['/','/informasi','/layanan','/profil','/kontak','/wilayah','/chatbot','/download','/app-version.json']))
+      .then(cache=>cache.addAll(['/','/informasi','/layanan','/profil','/kontak','/wilayah','/chatbot','/download','/app-version.json','/assets/loading-support/banyumas.jpg.b64','/assets/loading-support/germas.jpg.b64','/assets/loading-support/kemenkes.jpg.b64','/assets/loading-support/dinkominfo.jpg.b64']))
       .then(()=>self.skipWaiting())
   );
 });
