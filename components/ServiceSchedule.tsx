@@ -34,36 +34,57 @@ function splitStaff(row: Row): StaffRow[] {
 const icon = (c: string) => c.includes('Bidan') ? <Users /> : c.includes('VK') ? <HeartPulse /> : c.includes('Rujukan') ? <Stethoscope /> : <CalendarClock />;
 
 export default function ServiceSchedule() {
-  const [now, setNow] = useState<Date | null>(null);
+  const [now, setNow] = useState<Date>(() => new Date());
   const [rows, setRows] = useState<Row[]>([]);
-  useEffect(() => { const update = () => setNow(new Date()); update(); const tick = setInterval(update, 1000); return () => clearInterval(tick); }, []);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const update = () => setNow(new Date());
+    update();
+    const tick = setInterval(update, 30000);
+    return () => clearInterval(tick);
+  }, []);
+
   useEffect(() => {
     let alive = true;
+    let refresh: number | undefined;
     const load = async () => {
       try {
         const r = await fetch('/api/schedule', { cache: 'no-store' });
+        if (!r.ok) throw new Error(`schedule ${r.status}`);
         const d = await r.json();
         if (alive && Array.isArray(d.items)) setRows(d.items);
-      } catch {}
+      } catch {
+        // Keep the previous schedule rendered instead of blanking the section.
+      } finally {
+        if (alive) setLoading(false);
+      }
     };
     load();
-    const refresh = setInterval(load, 60000);
-    return () => { alive = false; clearInterval(refresh); };
+
+    const startRefresh = () => {
+      if (refresh === undefined) refresh = window.setInterval(load, 5 * 60 * 1000);
+    };
+    startRefresh();
+    return () => {
+      alive = false;
+      if (refresh !== undefined) window.clearInterval(refresh);
+    };
   }, []);
 
-  const current = now || new Date();
-  const x = (() => {
-    const f = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Jakarta', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(current);
+  const x = useMemo(() => {
+    const f = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Jakarta', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(now);
     const g = (t: string) => f.find(v => v.type === t)?.value || '';
     const map: Record<string, number> = { Sun:0, Mon:1, Tue:2, Wed:3, Thu:4, Fri:5, Sat:6 };
     return { day: map[g('weekday')] ?? 0, hour: Number(g('hour')), minute: Number(g('minute')) };
-  })();
+  }, [now]);
+
   const s = hours[x.day] || hours[0];
   const cur = x.hour * 60 + x.minute;
   const open = s[1] !== 'Tutup' && cur >= clockMinutes(s[1]) && cur < clockMinutes(s[2]);
-  const date = now ? new Intl.DateTimeFormat('id-ID', { timeZone: 'Asia/Jakarta', weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }).format(now) : 'Memuat waktu…';
-  const time = now ? new Intl.DateTimeFormat('id-ID', { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(now) : '--:--:--';
-  const todayKey = jakartaDateKey(current);
+  const date = useMemo(() => new Intl.DateTimeFormat('id-ID', { timeZone: 'Asia/Jakarta', weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' }).format(now), [now]);
+  const time = useMemo(() => new Intl.DateTimeFormat('id-ID', { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(now), [now]);
+  const todayKey = useMemo(() => jakartaDateKey(now), [now]);
   const todayRows = useMemo(() => rows.filter(r => r.category?.trim().toLowerCase() === 'perawat' && rowDateKey(r) === todayKey), [rows, todayKey]);
   const staffRows = useMemo(() => todayRows.flatMap(splitStaff), [todayRows]);
 
@@ -71,7 +92,7 @@ export default function ServiceSchedule() {
     <div className="scheduleNow"><div><div className="eyebrow"><CalendarClock size={15} /> Jadwal real-time WIB</div><h3>{date}</h3><p>Waktu sekarang <b>{time} WIB</b></p></div><div className={`openBadge ${open ? 'isOpen' : ''}`}>{open ? <CheckCircle2 size={16} /> : <Clock3 size={16} />} {open ? 'Sedang buka' : 'Di luar jam pendaftaran'}</div></div>
     <div className="scheduleToday"><b>{s[0]}</b><span>Pendaftaran {s[1]} – {s[2]} WIB</span></div>
     <div className="scheduleOperational"><div className="sectionHead mini"><div><div className="eyebrow">PETUGAS HARI INI</div><h3>Jadwal perawat realtime</h3></div><span className="scheduleCount">{staffRows.length} petugas</span></div>
-      {staffRows.length ? <div className="operationalGrid">{staffRows.map(staff => <div className="operationalCard" key={staff.id}><div className="icon">{icon(staff.source.category)}</div><div className="operationalInfo"><div className="newsMeta"><span>{staff.source.category}</span><span className="scheduleDot">•</span><span>{staff.source.time}</span></div><h4>{staff.name}</h4><span className="taskBadge"><span>Tugas</span>{staff.task}</span></div></div>)}</div> : <div className="emptyState">Belum ada jadwal perawat untuk hari ini.</div>}
+      {staffRows.length ? <div className="operationalGrid">{staffRows.map(staff => <div className="operationalCard" key={staff.id}><div className="icon">{icon(staff.source.category)}</div><div className="operationalInfo"><div className="newsMeta"><span>{staff.source.category}</span><span className="scheduleDot">•</span><span>{staff.source.time}</span></div><h4>{staff.name}</h4><span className="taskBadge"><span>Tugas</span>{staff.task}</span></div></div>)}</div> : <div className="emptyState">{loading ? 'Memuat jadwal perawat…' : 'Belum ada jadwal perawat untuk hari ini.'}</div>}
     </div>
     <div className="scheduleList">{[1,2,3,4,5,6].map(d => <div key={d}><span>{hours[d][0]}</span><b>{hours[d][1]} – {hours[d][2]} WIB</b></div>)}</div>
   </div>;
