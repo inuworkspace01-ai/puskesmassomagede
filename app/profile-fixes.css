@@ -1,0 +1,8 @@
+/* Profile layout polish: keep decorative layers behind cards and prevent frame collisions. */
+.pageTransition main>section:not(.pageHero):after{z-index:0!important;opacity:.12!important}
+.profileHero::after{z-index:0!important}.profileHeroGrid,.profileHeroGrid>*{position:relative;z-index:1}
+.visionCard,.missionGrid,.profileInfoGrid{position:relative;z-index:1}
+.visionCard>*{position:relative;z-index:1}.visionCard:after{z-index:0}
+.missionCard,.profileStory,.valueRow{position:relative;z-index:1}
+.profileMissionSection{overflow:hidden}.profileHero,.section{isolation:isolate}
+@media(max-width:760px){.profileHeroGrid{min-height:0}.visionCard{margin-top:2px}.profileMissionSection .sectionHead{margin-bottom:18px}.missionGrid{gap:12px}.profileStory{padding:22px}}
