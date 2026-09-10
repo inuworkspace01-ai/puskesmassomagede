@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 export default function LoadingScreen() {
   const [visible, setVisible] = useState(true);
   useEffect(() => {
-    const hideTimer = window.setTimeout(() => setVisible(false), 1150);
+    const hideTimer = window.setTimeout(() => setVisible(false), 700);
     return () => window.clearTimeout(hideTimer);
   }, []);
 
