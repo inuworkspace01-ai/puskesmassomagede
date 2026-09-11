@@ -8,7 +8,7 @@ const support = [
   { key: 'banyumas', label: 'Kabupaten Banyumas', src: '/assets/loading-support/banyumas-logo.svg' },
   { key: 'germas', label: 'GERMAS', src: '/assets/loading-support/germas-logo.svg' },
   { key: 'kemenkes', label: 'Kementerian Kesehatan', src: '/assets/loading-support/kemenkes-logo.svg' },
-  { key: 'dinkominfo', label: 'Dinkominfo Banyumas', src: '/assets/loading-support/dinkominfo-logo.svg' },
+  { key: 'komdigi', label: 'Kementerian Komunikasi dan Digital', src: 'https://upload.wikimedia.org/wikipedia/commons/6/65/Logo_Kementerian_Komunikasi_dan_Digital_Republik_Indonesia_%282024%29.svg' },
 ] as const;
 
 function SupportLogo({ src, alt }: { src: string; alt: string }) {
